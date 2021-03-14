@@ -1,5 +1,5 @@
 # We're using Debian Slim Buster image
-FROM python:3.9.0-slim-buster
+FROM python:3.8.5-slim-buster
 
 ENV PIP_NO_CACHE_DIR 1
 
@@ -11,11 +11,12 @@ RUN apt update && apt upgrade -y && \
     debian-keyring \
     debian-archive-keyring \
     bash \
+    bzip2 \
     curl \
+    figlet \
     git \
     util-linux \
     libffi-dev \
-    libfreetype6-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
     libwebp-dev \
@@ -23,50 +24,57 @@ RUN apt update && apt upgrade -y && \
     musl-dev \
     musl \
     neofetch \
+    php-pgsql \
     python3-lxml \
     postgresql \
     postgresql-client \
+    python3-psycopg2 \
     libpq-dev \
     libcurl4-openssl-dev \
     libxml2-dev \
     libxslt1-dev \
+    python3-pip \
+    python3-requests \
+    python3-sqlalchemy \
+    python3-tz \
+    python3-aiohttp \
     openssl \
     pv \
     jq \
     wget \
+    python3 \
     python3-dev \
     libreadline-dev \
     libyaml-dev \
+    gcc \
+    sqlite3 \
+    libsqlite3-dev \
+    sudo \
     zlib1g \
     ffmpeg \
     libssl-dev \
     libgconf-2-4 \
     libxi6 \
-    zlib1g-dev \
     xvfb \
     unzip \
-    make \
     libopus0 \
     libopus-dev \
-    gcc \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
 
 # Pypi package Repo upgrade
 RUN pip3 install --upgrade pip setuptools
 
+# Copy Python Requirements to /root/DashaBot
+RUN git clone -b shiken https://github.com/Kyliekyler/DashaBot /root/DashaBot
+WORKDIR /root/DashaBot
 
-# Copy Python Requirements to /root/nana
-WORKDIR /app/
+#Copy config file to /root/DashaBot/DashaBot
+COPY ./DashaBot/sample_config.py ./DashaBot/config.py* /root/DashaBot/DashaBot/
 
-ENV ENV True
+ENV PATH="/home/bot/bin:$PATH"
 
 # Install requirements
-COPY requirements.txt .
-
-# copy the content of the local src directory to the working directory
-COPY . .
-
-RUN make install
+RUN pip3 install -U -r requirements.txt
 
 # Starting Worker
-CMD ["make","run"]
+CMD ["python3","-m","DashaBot"]

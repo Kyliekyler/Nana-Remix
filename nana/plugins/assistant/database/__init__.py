@@ -1,1 +1,0 @@
-"""Assistant Database Directory."""

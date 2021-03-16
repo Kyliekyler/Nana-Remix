@@ -61,6 +61,8 @@ def rm_afk(user_id):
         if curr:
             if user_id in AFK_USERS:  # sanity check
                 del AFK_USERS[user_id]
+                
+            AFK_USERS[user_id] = {"reason": user.reason, "time": user.time}
 
             SESSION.delete(curr)
             SESSION.commit()

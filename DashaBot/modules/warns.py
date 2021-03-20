@@ -3,7 +3,7 @@ import re
 from typing import Optional
 
 import telegram
-from DashaBot import TIGERS, WOLVES, dispatcher
+from DashaBot import dispatcher
 from DashaBot.modules.disable import DisableAbleCommandHandler
 from DashaBot.modules.helper_funcs.chat_status import (
     bot_admin,
@@ -58,24 +58,6 @@ def warn(
         # message.reply_text("Damn admins, They are too far to be One Punched!")
         return
 
-    if user.id in TIGERS:
-        if warner:
-            message.reply_text("Tigers cant be warned.")
-        else:
-            message.reply_text(
-                "Tiger triggered an auto warn filter!\n I can't warn tigers but they should avoid abusing this."
-            )
-        return
-
-    if user.id in WOLVES:
-        if warner:
-            message.reply_text("Wolf disasters are warn immune.")
-        else:
-            message.reply_text(
-                "Wolf Disaster triggered an auto warn filter!\nI can't warn wolves but they should avoid abusing this."
-            )
-        return
-
     if warner:
         warner_tag = mention_html(warner.id, warner.first_name)
     else:
@@ -88,17 +70,17 @@ def warn(
         if soft_warn:  # kick
             chat.unban_member(user.id)
             reply = (
-                f"<code>❕</code><b>Punch Event</b>\n"
-                f"<code> </code><b>•  User:</b> {mention_html(user.id, user.first_name)}\n"
-                f"<code> </code><b>•  Count:</b> {limit}"
+                f"Yeah you're right get out!"
+                f"Kicked {mention_html(user.id, user.first_name)}!\n"
+                f"Warn Count: {limit}"
             )
 
         else:  # ban
             chat.kick_member(user.id)
             reply = (
-                f"<code>❕</code><b>Ban Event</b>\n"
-                f"<code> </code><b>•  User:</b> {mention_html(user.id, user.first_name)}\n"
-                f"<code> </code><b>•  Count:</b> {limit}"
+                f"Another one bites the dust..."
+                f"Banned {mention_html(user.id, user.first_name)}!\n"
+                f"Warn Count: {limit}"
             )
 
         for warn_reason in reasons:
@@ -120,16 +102,16 @@ def warn(
             [
                 [
                     InlineKeyboardButton(
-                        "🔘 Remove warn", callback_data="rm_warn({})".format(user.id)
+                        "Remove warn (admin only)", callback_data="rm_warn({})".format(user.id)
                     )
                 ]
             ]
         )
 
         reply = (
-            f"<code>❕</code><b>Warn Event</b>\n"
-            f"<code> </code><b>•  User:</b> {mention_html(user.id, user.first_name)}\n"
-            f"<code> </code><b>•  Count:</b> {num_warns}/{limit}"
+            f"Oopsies!"
+            f"Warned {mention_html(user.id, user.first_name)}!\n"
+            f"Warn Count: {num_warns}/{limit}"
         )
         if reason:
             reply += f"\n<code> </code><b>•  Reason:</b> {html.escape(reason)}"
@@ -476,8 +458,8 @@ def set_warn_strength(update: Update, context: CallbackContext):
 
 def __stats__():
     return (
-        f"• {sql.num_warns()} overall warns, across {sql.num_warn_chats()} chats.\n"
-        f"• {sql.num_warn_filters()} warn filters, across {sql.num_warn_filter_chats()} chats."
+        f"- {sql.num_warns()} overall warns, across {sql.num_warn_chats()} chats.\n"
+        f"- {sql.num_warn_filters()} warn filters, across {sql.num_warn_filter_chats()} chats."
     )
 
 

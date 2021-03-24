@@ -2,12 +2,7 @@
 import html
 import DashaBot.modules.sql.blacklistusers_sql as sql
 from DashaBot import (
-    DEV_USERS,
     OWNER_ID,
-    DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 from DashaBot.modules.helper_funcs.chat_status import dev_plus
@@ -20,9 +15,6 @@ from telegram import ParseMode, Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, run_async
 from telegram.utils.helpers import mention_html
-
-BLACKLISTWHITELIST = [OWNER_ID] + DEV_USERS + DRAGONS + WOLVES + DEMONS
-BLABLEUSERS = [OWNER_ID] + DEV_USERS
 
 
 @run_async
@@ -42,18 +34,14 @@ def bl_user(update: Update, context: CallbackContext) -> str:
         message.reply_text("How am I supposed to do my work if I am ignoring myself?")
         return ""
 
-    if user_id in BLACKLISTWHITELIST:
-        message.reply_text("No!\nNoticing Disasters is my job.")
-        return ""
-
     try:
         target_user = bot.get_chat(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user.")
             return ""
-        else:
-            raise
+            
+        raise
 
     sql.blacklist_user(user_id, reason)
     message.reply_text("I shall ignore the existence of this user!")
@@ -91,8 +79,8 @@ def unbl_user(update: Update, context: CallbackContext) -> str:
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user.")
             return ""
-        else:
-            raise
+            
+        raise
 
     if sql.is_user_blacklisted(user_id):
 
@@ -122,14 +110,14 @@ def bl_users(update: Update, context: CallbackContext):
 
         if reason:
             users.append(
-                f"- {mention_html(user.id, html.escape(user.first_name))} :- {reason}"
+                f"- {mention_html(user.id, html.escape(user.first_name))} | {reason}"
             )
         else:
-            users.append(f"• {mention_html(user.id, html.escape(user.first_name))}")
+            users.append(f"- {mention_html(user.id, html.escape(user.first_name))}")
 
-    message = "<b>Blacklisted Users</b>\n"
+    message = "Blacklisted Users:\n"
     if not users:
-        message += "Noone is being ignored as of yet."
+        message += "Nobody is being ignored as of now."
     else:
         message += "\n".join(users)
 
@@ -139,18 +127,16 @@ def bl_users(update: Update, context: CallbackContext):
 def __user_info__(user_id):
     is_blacklisted = sql.is_user_blacklisted(user_id)
 
-    text = "Blacklisted: <b>{}</b>"
+    text = "Blacklisted: {}"
     if user_id in [777000, 1087968824]:
         return ""
     if user_id == dispatcher.bot.id:
-        return ""
-    if int(user_id) in DRAGONS + TIGERS + WOLVES:
         return ""
     if is_blacklisted:
         text = text.format("Yes")
         reason = sql.get_reason(user_id)
         if reason:
-            text += f"\nReason: <code>{reason}</code>"
+            text += f"\nReason: {reason}"
     else:
         text = text.format("No")
 

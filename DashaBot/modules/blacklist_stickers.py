@@ -81,8 +81,8 @@ def add_blackliststicker(update: Update, context: CallbackContext):
         chat_id = update.effective_chat.id
         if chat.type == "private":
             return
-        else:
-            chat_name = chat.title
+
+        chat_name = chat.title
 
     if len(words) > 1:
         text = words[1].replace("https://t.me/addstickers/", "")
@@ -173,8 +173,8 @@ def unblackliststicker(update: Update, context: CallbackContext):
         chat_id = update.effective_chat.id
         if chat.type == "private":
             return
-        else:
-            chat_name = chat.title
+
+        chat_name = chat.title
 
     if len(words) > 1:
         text = words[1].replace("https://t.me/addstickers/", "")
@@ -335,33 +335,34 @@ def blacklist_mode(update: Update, context: CallbackContext):
                 settypeblacklist,
             )
         )
+
+    getmode, getvalue = sql.get_blacklist_setting(chat.id)
+    if getmode == 0:
+        settypeblacklist = "not active"
+    elif getmode == 1:
+        settypeblacklist = "delete"
+    elif getmode == 2:
+        settypeblacklist = "warn"
+    elif getmode == 3:
+        settypeblacklist = "mute"
+    elif getmode == 4:
+        settypeblacklist = "kick"
+    elif getmode == 5:
+        settypeblacklist = "ban"
+    elif getmode == 6:
+        settypeblacklist = "temporarily banned for {}".format(getvalue)
+    elif getmode == 7:
+        settypeblacklist = "temporarily muted for {}".format(getvalue)
+        
+    if conn:
+        text = "Blacklist sticker mode is currently set to *{}* in *{}*.".format(
+            settypeblacklist, chat_name
+        )
     else:
-        getmode, getvalue = sql.get_blacklist_setting(chat.id)
-        if getmode == 0:
-            settypeblacklist = "not active"
-        elif getmode == 1:
-            settypeblacklist = "delete"
-        elif getmode == 2:
-            settypeblacklist = "warn"
-        elif getmode == 3:
-            settypeblacklist = "mute"
-        elif getmode == 4:
-            settypeblacklist = "kick"
-        elif getmode == 5:
-            settypeblacklist = "ban"
-        elif getmode == 6:
-            settypeblacklist = "temporarily banned for {}".format(getvalue)
-        elif getmode == 7:
-            settypeblacklist = "temporarily muted for {}".format(getvalue)
-        if conn:
-            text = "Blacklist sticker mode is currently set to *{}* in *{}*.".format(
-                settypeblacklist, chat_name
-            )
-        else:
-            text = "Blacklist sticker mode is currently set to *{}*.".format(
-                settypeblacklist
-            )
-        send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
+        text = "Blacklist sticker mode is currently set to *{}*.".format(
+            settypeblacklist
+        )
+    send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
     return ""
 
 
@@ -384,7 +385,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
             try:
                 if getmode == 0:
                     return
-                elif getmode == 1:
+                if getmode == 1:
                     message.delete()
                 elif getmode == 2:
                     message.delete()
@@ -489,28 +490,9 @@ def __chat_settings__(chat_id, user_id):
 
 
 def __stats__():
-    return "• {} blacklist stickers, across {} chats.".format(
+    return "- {} blacklist stickers, across {} chats.".format(
         sql.num_stickers_filters(), sql.num_stickers_filter_chats()
     )
-
-
-__help__ = """
-*Command for Anyone:* 
-- `/blsticker`*:* See current blacklisted sticker
-
-*Commands for Admins:*
-- `/addblsticker <sticker link>`*:* Add the sticker trigger to the black list. Can be added via reply sticker
-- `/unblsticker <sticker link>`*:* Remove triggers from blacklist. The same newline logic applies here, so you can delete multiple triggers at once
-- `/rmblsticker <sticker link>`*:* Same as above
-- `/blstickermode <ban/tban/mute/tmute>`*:* Sets up a default action on what to do if users use blacklisted stickers
-
-*Notes:*
-- Blacklist stickers do not affect the group admins
-- `<sticker link>` can be `https://t.me/addstickers/<sticker>` or just `<sticker>` or reply to the sticker message
-- For tban and tmute blacklist sticker action you should specify the time (i.e 5m, 1h, 2d, 3w)
-"""
-
-__mod_name__ = "Blacklist Stickers"
 
 BLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler(
     "blsticker", blackliststicker, admin_ok=True

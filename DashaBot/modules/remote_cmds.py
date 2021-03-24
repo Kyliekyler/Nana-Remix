@@ -99,7 +99,8 @@ def rban(update: Update, context: CallbackContext):
             "You don't seem to be referring to a user or the ID specified is incorrect.."
         )
         return
-    elif not chat_id:
+
+    if not chat_id:
         message.reply_text("You don't seem to be referring to a chat.")
         return
 
@@ -111,8 +112,8 @@ def rban(update: Update, context: CallbackContext):
                 "Chat not found! Make sure you entered a valid chat ID and I'm part of that chat."
             )
             return
-        else:
-            raise
+
+        raise
 
     if chat.type == "private":
         message.reply_text("I'm sorry, but that's a private chat!")
@@ -133,8 +134,8 @@ def rban(update: Update, context: CallbackContext):
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_ban_protected(chat, user_id, member):
         message.reply_text("I really wish I could ban admins...")
@@ -194,8 +195,8 @@ def runban(update: Update, context: CallbackContext):
                 "Chat not found! Make sure you entered a valid chat ID and I'm part of that chat."
             )
             return
-        else:
-            raise
+
+        raise
 
     if chat.type == "private":
         message.reply_text("I'm sorry, but that's a private chat!")
@@ -216,8 +217,8 @@ def runban(update: Update, context: CallbackContext):
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user there")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_in_chat(chat, user_id):
         message.reply_text(
@@ -267,7 +268,8 @@ def rkick(update: Update, context: CallbackContext):
             "You don't seem to be referring to a user or the ID specified is incorrect.."
         )
         return
-    elif not chat_id:
+    
+    if not chat_id:
         message.reply_text("You don't seem to be referring to a chat.")
         return
 
@@ -279,8 +281,8 @@ def rkick(update: Update, context: CallbackContext):
                 "Chat not found! Make sure you entered a valid chat ID and I'm part of that chat."
             )
             return
-        else:
-            raise
+
+        raise
 
     if chat.type == "private":
         message.reply_text("I'm sorry, but that's a private chat!")
@@ -301,8 +303,8 @@ def rkick(update: Update, context: CallbackContext):
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_ban_protected(chat, user_id, member):
         message.reply_text("I really wish I could kick admins...")
@@ -350,7 +352,8 @@ def rmute(update: Update, context: CallbackContext):
             "You don't seem to be referring to a user or the ID specified is incorrect.."
         )
         return
-    elif not chat_id:
+    
+    if not chat_id:
         message.reply_text("You don't seem to be referring to a chat.")
         return
 
@@ -362,8 +365,8 @@ def rmute(update: Update, context: CallbackContext):
                 "Chat not found! Make sure you entered a valid chat ID and I'm part of that chat."
             )
             return
-        else:
-            raise
+
+        raise
 
     if chat.type == "private":
         message.reply_text("I'm sorry, but that's a private chat!")
@@ -384,8 +387,8 @@ def rmute(update: Update, context: CallbackContext):
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_ban_protected(chat, user_id, member):
         message.reply_text("I really wish I could mute admins...")
@@ -435,7 +438,8 @@ def runmute(update: Update, context: CallbackContext):
             "You don't seem to be referring to a user or the ID specified is incorrect.."
         )
         return
-    elif not chat_id:
+
+    if not chat_id:
         message.reply_text("You don't seem to be referring to a chat.")
         return
 
@@ -447,8 +451,8 @@ def runmute(update: Update, context: CallbackContext):
                 "Chat not found! Make sure you entered a valid chat ID and I'm part of that chat."
             )
             return
-        else:
-            raise
+
+        raise
 
     if chat.type == "private":
         message.reply_text("I'm sorry, but that's a private chat!")
@@ -469,8 +473,8 @@ def runmute(update: Update, context: CallbackContext):
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user there")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_in_chat(chat, user_id):
         if (
@@ -516,11 +520,11 @@ def runmute(update: Update, context: CallbackContext):
             message.reply_text("Well damn, I can't unmute that user.")
 
 
-RBAN_HANDLER = CommandHandler("rban", rban, filters=CustomFilters.sudo_filter)
-RUNBAN_HANDLER = CommandHandler("runban", runban, filters=CustomFilters.sudo_filter)
-RKICK_HANDLER = CommandHandler("rkick", rkick, filters=CustomFilters.sudo_filter)
-RMUTE_HANDLER = CommandHandler("rmute", rmute, filters=CustomFilters.sudo_filter)
-RUNMUTE_HANDLER = CommandHandler("runmute", runmute, filters=CustomFilters.sudo_filter)
+RBAN_HANDLER = CommandHandler("rban", rban, filters=CustomFilters.dev_filter)
+RUNBAN_HANDLER = CommandHandler("runban", runban, filters=CustomFilters.dev_filter)
+RKICK_HANDLER = CommandHandler("rkick", rkick, filters=CustomFilters.dev_filter)
+RMUTE_HANDLER = CommandHandler("rmute", rmute, filters=CustomFilters.dev_filter)
+RUNMUTE_HANDLER = CommandHandler("runmute", runmute, filters=CustomFilters.dev_filter)
 
 dispatcher.add_handler(RBAN_HANDLER)
 dispatcher.add_handler(RUNBAN_HANDLER)

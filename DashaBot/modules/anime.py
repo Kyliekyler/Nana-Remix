@@ -5,8 +5,8 @@ import textwrap
 import bs4
 import jikanpy
 import requests
-from SaitamaRobot import dispatcher
-from SaitamaRobot.modules.disable import DisableAbleCommandHandler
+from DashaBot import dispatcher
+from DashaBot.modules.disable import DisableAbleCommandHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update, Message
 from telegram.ext import CallbackContext, run_async
 
@@ -174,7 +174,7 @@ def airing(update: Update, context: CallbackContext):
     search_str = extract_arg(message)
     if not search_str:
         update.effective_message.reply_text(
-            "Tell Anime Name :) ( /airing <anime name>)"
+            "Add anime name after command or reply to message that matches anime name."
         )
         return
     variables = {"search": search_str}
@@ -196,14 +196,16 @@ def anime(update: Update, context: CallbackContext):
     message = update.effective_message
     search = extract_arg(message)
     if not search:
-        update.effective_message.reply_text("Format : /anime < anime name >")
+        update.effective_message.reply_text(
+            "Add anime name after command or reply to message that matches anime name."
+        )
         return
     variables = {"search": search}
     json = requests.post(
         url, json={"query": anime_query, "variables": variables}
     ).json()
     if "errors" in json.keys():
-        update.effective_message.reply_text("Anime not found")
+        update.effective_message.reply_text("Anime not found!")
         return
     if json:
         json = json["data"]["Media"]
@@ -235,7 +237,7 @@ def anime(update: Update, context: CallbackContext):
             buttons = [
                 [
                     InlineKeyboardButton("More Info", url=info),
-                    InlineKeyboardButton("Trailer 🎬", url=trailer),
+                    InlineKeyboardButton("Trailer", url=trailer),
                 ]
             ]
         else:
@@ -268,14 +270,15 @@ def character(update: Update, context: CallbackContext):
     message = update.effective_message
     search = extract_arg(message)
     if not search:
-        update.effective_message.reply_text("Format : /character < character name >")
+        update.effective_message.reply_text(
+            "Add character name after command or reply to message that matches character name.")
         return
     variables = {"query": search}
     json = requests.post(
         url, json={"query": character_query, "variables": variables}
     ).json()
     if "errors" in json.keys():
-        update.effective_message.reply_text("Character not found")
+        update.effective_message.reply_text("Character not found!")
         return
     if json:
         json = json["data"]["Character"]
@@ -302,7 +305,9 @@ def manga(update: Update, context: CallbackContext):
     message = update.effective_message
     search = extract_arg(message)
     if not search:
-        update.effective_message.reply_text("Format : /manga < manga name >")
+        update.effective_message.reply_text(
+            "Add manga name after command or reply to message that matches manga name."
+        )
         return
     variables = {"search": search}
     json = requests.post(
@@ -310,7 +315,7 @@ def manga(update: Update, context: CallbackContext):
     ).json()
     msg = ""
     if "errors" in json.keys():
-        update.effective_message.reply_text("Manga not found")
+        update.effective_message.reply_text("Manga not found!")
         return
     if json:
         json = json["data"]["Media"]
@@ -369,7 +374,9 @@ def user(update: Update, context: CallbackContext):
     search_query = extract_arg(message)
 
     if not search_query:
-        update.effective_message.reply_text("Format : /user <username>")
+        update.effective_message.reply_text(
+            "Add username after command or reply to message that matches username."
+        )
         return
 
     jikan = jikanpy.jikan.Jikan()

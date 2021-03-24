@@ -14,12 +14,7 @@ from telegram.error import BadRequest
 from telegram.utils.helpers import escape_markdown, mention_html
 
 from DashaBot import (
-    DEV_USERS,
     OWNER_ID,
-    DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     INFOPIC,
     dispatcher,
     sw,
@@ -30,10 +25,9 @@ from DashaBot.modules.disable import DisableAbleCommandHandler
 from DashaBot.modules.sql.global_bans_sql import is_user_gbanned
 from DashaBot.modules.sql.afk_sql import is_afk, check_afk_status
 from DashaBot.modules.sql.users_sql import get_user_num_chats
-from DashaBot.modules.helper_funcs.chat_status import sudo_plus
+from DashaBot.modules.helper_funcs.chat_status import dev_plus
 from DashaBot.modules.helper_funcs.extraction import extract_user
-from DashaBot import telethn as DashaTelethonClient, TIGERS, DRAGONS, DEMONS
-
+from DashaBot import telethn as DashaTelethonClient
 
 def no_by_per(totalhp, percentage):
     """
@@ -134,8 +128,8 @@ def get_id(update: Update, context: CallbackContext):
 
             msg.reply_text(
                 f"<b>Telegram ID:</b>,"
-                f"• {html.escape(user2.first_name)} - <code>{user2.id}</code>.\n"
-                f"• {html.escape(user1.first_name)} - <code>{user1.id}</code>.",
+                f"- {html.escape(user2.first_name)} | <code>{user2.id}</code>.\n"
+                f"- {html.escape(user1.first_name)} | <code>{user1.id}</code>.",
                 parse_mode=ParseMode.HTML,
             )
 
@@ -162,7 +156,7 @@ def get_id(update: Update, context: CallbackContext):
 
 @DashaTelethonClient.on(
     events.NewMessage(
-        pattern="/ginfo ", from_users=(TIGERS or []) + (DRAGONS or []) + (DEMONS or [])
+        pattern="/ginfo ", from_users=OWNER_ID
     )
 )
 async def group_info(event) -> None:
@@ -175,7 +169,7 @@ async def group_info(event) -> None:
         ch_full = await event.client(GetFullChannelRequest(channel=entity))
     except:
         await event.reply(
-            "Can't for some reason, maybe it is a private one or that I am banned there."
+            "I can't get info for some reason, maybe it is a private one or that I am banned there."
         )
         return
     msg = f"**ID**: `{entity.id}`"
@@ -193,7 +187,7 @@ async def group_info(event) -> None:
     msg += f"\n`Users`: `{totallist.total}`"
     msg += "\n\n**Admins List:**"
     for x in totallist:
-        msg += f"\n• [{x.id}](tg://user?id={x.id})"
+        msg += f"\n- [{x.id}](tg://user?id={x.id})"
     msg += f"\n\n**Description**:\n`{ch_full.full_chat.about}`"
     await event.reply(msg)
 
@@ -287,26 +281,11 @@ def info(update: Update, context: CallbackContext):
     disaster_level_present = False
 
     if user.id == OWNER_ID:
-        text += "\n\nThe Disaster level of this person is 'God'."
-        disaster_level_present = True
-    elif user.id in DEV_USERS:
-        text += "\n\nThis user is member of 'Hero Association'."
-        disaster_level_present = True
-    elif user.id in DRAGONS:
-        text += "\n\nThe Disaster level of this person is 'Dragon'."
-        disaster_level_present = True
-    elif user.id in DEMONS:
-        text += "\n\nThe Disaster level of this person is 'Demon'."
-        disaster_level_present = True
-    elif user.id in TIGERS:
-        text += "\n\nThe Disaster level of this person is 'Tiger'."
-        disaster_level_present = True
-    elif user.id in WOLVES:
-        text += "\n\nThe Disaster level of this person is 'Wolf'."
-        disaster_level_present = True
+        text += "\n\nThis user is my OWNER."
+        owner_present = True
 
-    if disaster_level_present:
-        text += ' [<a href="https://t.me/DashaBotUpdates/3">?</a>]'.format(
+    if owner_present:
+        text += ' [<a href="https://t.me/Kyliekyler">?</a>]'.format(
             bot.username
         )
 
@@ -384,7 +363,7 @@ def about_me(update: Update, context: CallbackContext):
             f"{username} hasn't set an info message about themselves yet!"
         )
     else:
-        update.effective_message.reply_text("There isnt one, use /setme to set one.")
+        update.effective_message.reply_text("There isn't one, use /setme to set one.")
 
 
 @run_async
@@ -398,7 +377,7 @@ def set_about_me(update: Update, context: CallbackContext):
     if message.reply_to_message:
         repl_message = message.reply_to_message
         repl_user_id = repl_message.from_user.id
-        if repl_user_id in [bot.id, 777000, 1087968824] and (user_id in DEV_USERS):
+        if repl_user_id in [bot.id, 777000, 1087968824] and (user_id in [OWNER_ID]):
             user_id = repl_user_id
     text = message.text
     info = text.split(None, 1)
@@ -420,9 +399,9 @@ def set_about_me(update: Update, context: CallbackContext):
 
 
 @run_async
-@sudo_plus
+@dev_plus
 def stats(update: Update, context: CallbackContext):
-    stats = "<b>Current stats:</b>\n" + "\n".join([mod.__stats__() for mod in STATS])
+    stats = "<b>Current Stats:</b>\n" + "\n".join([mod.__stats__() for mod in STATS])
     result = re.sub(r"(\d+)", r"<code>\1</code>", stats)
     update.effective_message.reply_text(result, parse_mode=ParseMode.HTML)
 
@@ -449,11 +428,11 @@ def about_bio(update: Update, context: CallbackContext):
     elif message.reply_to_message:
         username = user.first_name
         update.effective_message.reply_text(
-            f"{username} hasn't had a message set about themselves yet!\nSet one using /setbio"
+            f"Nobody sets {username}'s bio yet!\nSet one using /setbio"
         )
     else:
         update.effective_message.reply_text(
-            "You haven't had a bio set about yourself yet!"
+            "Nobody sets your bio yet!"
         )
 
 
@@ -473,11 +452,11 @@ def set_about_bio(update: Update, context: CallbackContext):
             )
             return
 
-        if user_id in [777000, 1087968824] and sender_id not in DEV_USERS:
-            message.reply_text("You are not authorised")
+        if user_id in [777000, 1087968824] and sender_id not in [OWNER_ID]:
+            message.reply_text("You are not authorized to do that!")
             return
 
-        if user_id == bot.id and sender_id not in DEV_USERS:
+        if user_id == bot.id and sender_id not in [OWNER_ID]:
             message.reply_text(
                 "Uhmmm... yeah, I dont trust you to set my bio."
             )

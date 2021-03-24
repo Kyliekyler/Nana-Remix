@@ -11,7 +11,6 @@ from DashaBot import (
     LOGGER,
     OWNER_ID,
     PORT,
-    SUPPORT_CHAT,
     TOKEN,
     URL,
     WEBHOOK,
@@ -79,10 +78,10 @@ You can find my list of available commands with /help.
 """
 
 HELP_STRINGS = """
-Hey! My name is *{}*.
+Hi! My name is *{}*.
 Have a look at the following for an idea of some of the things I can help you with.
 
-*Main Commands*
+*Main Commands:*
 - /help: Sends you this message
 - /help <module name>: Sends you info about the module
 - /donate: Information on how to donate
@@ -212,28 +211,18 @@ def start(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text="Add Dasha to your group",
+                                text="ADD DASHA TO GROUP",
                                 url="t.me/{}?startgroup=true".format(
                                     context.bot.username
                                 ),
                             )
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="Support Group",
-                                url=f"https://t.me/{SUPPORT_CHAT}",
-                            ),
-                            InlineKeyboardButton(
-                                text="Updates Channel",
-                                url="https://t.me/DashaBotUpdates",
-                            ),
                         ],
                     ]
                 ),
             )
     else:
         update.effective_message.reply_text(
-            "I'm awake already!\n<b>Haven't slept since:</b> <code>{}</code>".format(
+            "I'm awake already!\nHaven't slept since: <code>{}</code>".format(
                 uptime
             ),
             parse_mode=ParseMode.HTML,
@@ -375,7 +364,7 @@ def get_help(update: Update, context: CallbackContext):
         )
         return
 
-    elif len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
+    if len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
         module = args[1].lower()
         text = (
             "Here is the available help for *{}*:\n".format(
@@ -411,7 +400,7 @@ def send_settings(chat_id, user_id, user=False):
         else:
             dispatcher.bot.send_message(
                 user_id,
-                "Seems like there aren't any user specific settings available :'(",
+                "Seems like there aren't any user specific settings available.",
                 parse_mode=ParseMode.MARKDOWN,
             )
 
@@ -613,7 +602,7 @@ def main():
             dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}", "I am now online!")
         except Unauthorized:
             LOGGER.warning(
-                "Bot isnt able to send message to support_chat, go and check!"
+                "Bot isn't able to send message to support_chat, go and check!"
             )
         except BadRequest as e:
             LOGGER.warning(e.message)

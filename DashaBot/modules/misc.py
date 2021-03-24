@@ -85,6 +85,43 @@ __help__ = """
 *Commands for Anyone:*
 - `/markdownhelp`*:* Quick summary of how markdown works in telegram - can only be called in private chats
 - `/paste`*:* Saves replied content to `nekobin.com` and replies with a url
+
+*Commands for Bot Owner:*
+`/ping`*:* gets ping time of bot to telegram server
+`/broadcastall`*:* Broadcasts everywhere
+`/broadcastusers`*:* Broadcasts too all users
+`/broadcastgroups`*:* Broadcasts too all groups
+`/groups`*:* List the groups with Name, ID, members count as a txt
+`/leave <ID>`*:* Leave the group, ID must have hyphen
+`/stats`*:* Shows overall bot stats
+`/getchats`*:* Gets a list of group names the user has been seen in.
+`/ginfo username/link/ID`*:* Pulls info panel for entire group
+`/ignore`*:* Blacklists a user from using the bot entirely
+`/lockdown <off/on>`*:* Toggles bot adding to groups
+`/notice`*:* Removes user from blacklist
+`/ignoredlist`*:* Lists ignored users
+`/listmodules`*:* Prints modules and their names
+`/unload <name>`*:* Unloads module dynamically
+`/load <name>`*:* Loads module
+`/speedtest`*:* Runs a speedtest and gives you 2 options to choose from, text or image output
+`/rban user group`*:* Remote ban
+`/runban user group`*:* Remote un-ban
+`/rkick user group`*:* Remote punch
+`/rmute user group`*:* Remote mute
+`/runmute user group`*:* Remote un-mute
+`/reboot`*:* Restarts the bots service
+`/gitpull`*:* Pulls the repo and then restarts the bots service
+`/debug <on/off>`*:* Logs commands to updates.txt
+`/logs`*:* Run this in support group to get logs in pm
+`/eval`*:* Self explanatory
+`/sh`*:* Runs shell command
+`/shell`*:* Runs shell command
+`/clearlocals`*:* As the name goes
+`/dbcleanup`*:* Removes deleted accs and groups from db
+`/py`*:* Runs python code
+`/gban <id> <reason>`*:* Gbans the user, works by reply too
+`/ungban`*:* Ungbans the user, same usage as gban
+`/gbanlist`*:* Outputs a list of gbanned users
 """
 
 ECHO_HANDLER = DisableAbleCommandHandler("echo", echo, filters=Filters.group)

@@ -2,7 +2,7 @@ from time import sleep
 
 import DashaBot.modules.sql.global_bans_sql as gban_sql
 import DashaBot.modules.sql.users_sql as user_sql
-from DashaBot import DEV_USERS, OWNER_ID, dispatcher
+from DashaBot import OWNER_ID, dispatcher
 from DashaBot.modules.helper_funcs.chat_status import dev_plus
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.error import BadRequest, Unauthorized
@@ -54,11 +54,11 @@ def get_invalid_chats(update: Update, context: CallbackContext, remove: bool = F
 
     if not remove:
         return kicked_chats
-    else:
-        for muted_chat in chat_list:
-            sleep(0.1)
-            user_sql.rem_chat(muted_chat)
-        return kicked_chats
+
+    for muted_chat in chat_list:
+        sleep(0.1)
+        user_sql.rem_chat(muted_chat)
+    return kicked_chats
 
 
 def get_invalid_gban(update: Update, context: CallbackContext, remove: bool = False):
@@ -80,11 +80,11 @@ def get_invalid_gban(update: Update, context: CallbackContext, remove: bool = Fa
 
     if not remove:
         return ungbanned_users
-    else:
-        for user_id in ungban_list:
-            sleep(0.1)
-            gban_sql.ungban_user(user_id)
-        return ungbanned_users
+ 
+    for user_id in ungban_list:
+        sleep(0.1)
+        gban_sql.ungban_user(user_id)
+    return ungbanned_users
 
 
 @run_async
@@ -116,7 +116,7 @@ def callback_button(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     query_type = query.data
 
-    admin_list = [OWNER_ID] + DEV_USERS
+    admin_list = [OWNER_ID]
 
     bot.answer_callback_query(query.id)
 

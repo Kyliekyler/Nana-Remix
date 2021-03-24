@@ -11,8 +11,6 @@ from telegram import ChatPermissions, ParseMode, Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, run_async
 
-GIF_ID = "CgACAgQAAx0CSVUvGgAC7KpfWxMrgGyQs-GUUJgt-TSO8cOIDgACaAgAAlZD0VHT3Zynpr5nGxsE"
-
 
 @run_async
 def runs(update: Update, context: CallbackContext):
@@ -20,22 +18,6 @@ def runs(update: Update, context: CallbackContext):
     if update.effective_user.id == 626338500:
         temp = "Run everyone, they just dropped a bomb 💣💣"
     update.effective_message.reply_text(temp)
-
-
-@run_async
-def sanitize(update: Update, context: CallbackContext):
-    message = update.effective_message
-    name = (
-        message.reply_to_message.from_user.first_name
-        if message.reply_to_message
-        else message.from_user.first_name
-    )
-    reply_animation = (
-        message.reply_to_message.reply_animation
-        if message.reply_to_message
-        else message.reply_animation
-    )
-    reply_animation(GIF_ID, caption=f"*Sanitizes {name}*")
 
 
 @run_async
@@ -325,6 +307,16 @@ def weebify(update: Update, context: CallbackContext):
         message.reply_to_message.reply_text(string)
     else:
         message.reply_text(string)
+        
+        
+@run_async
+def wish(update: Update, context: CallbackContext):
+    reply_text = (
+        update.effective_message.reply_to_message.reply_text
+        if update.effective_message.reply_to_message
+        else update.effective_message.reply_text
+    )
+    reply_text(random.choice(fun_strings.WISH))
 
 
 __help__ = """
@@ -360,7 +352,9 @@ EIGHTBALL_HANDLER = DisableAbleCommandHandler("8ball", eightball)
 TABLE_HANDLER = DisableAbleCommandHandler("table", table)
 SHOUT_HANDLER = DisableAbleCommandHandler("shout", shout)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify)
+WISH_HANDLER = DisableAbleCommandHandler("wish", wish)
 
+dispatcher.add_handler(WISH_HANDLER)
 dispatcher.add_handler(WEEBIFY_HANDLER)
 dispatcher.add_handler(SHOUT_HANDLER)
 dispatcher.add_handler(SANITIZE_HANDLER)
@@ -391,6 +385,7 @@ __command_list__ = [
     "sanitize",
     "shout",
     "weebify",
+    "wish",
     "8ball",
 ]
 __handlers__ = [
@@ -407,5 +402,6 @@ __handlers__ = [
     SANITIZE_HANDLER,
     SHOUT_HANDLER,
     WEEBIFY_HANDLER,
+    WISH_HANDLER,
     EIGHTBALL_HANDLER,
 ]

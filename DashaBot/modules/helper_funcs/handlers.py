@@ -1,6 +1,6 @@
 import DashaBot.modules.sql.blacklistusers_sql as sql
 from DashaBot import ALLOW_EXCL
-from DashaBot import DEV_USERS, DRAGONS, DEMONS, TIGERS, WOLVES
+from DashaBot import OWNER_ID
 
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, RegexHandler, Filters
@@ -20,13 +20,7 @@ else:
 
 class AntiSpam:
     def __init__(self):
-        self.whitelist = (
-            (DEV_USERS or [])
-            + (DRAGONS or [])
-            + (WOLVES or [])
-            + (DEMONS or [])
-            + (TIGERS or [])
-        )
+        self.whitelist = [OWNER_ID]
         # Values are HIGHLY experimental, its recommended you pay attention to our commits as we will be adjusting the values over time with what suits best.
         Duration.CUSTOM = 15  # Custom duration, 15 seconds
         self.sec_limit = RequestRate(6, Duration.CUSTOM)  # 6 / Per 15 Seconds
@@ -101,16 +95,16 @@ class CustomCommandHandler(CommandHandler):
                     filter_result = self.filters(update)
                     if filter_result:
                         return args, filter_result
-                    else:
-                        return False
+
+                    return False
 
     def handle_update(self, update, dispatcher, check_result, context=None):
         if context:
             self.collect_additional_context(context, update, dispatcher, check_result)
             return self.callback(update, context)
-        else:
-            optional_args = self.collect_optional_args(dispatcher, update, check_result)
-            return self.callback(dispatcher.bot, update, **optional_args)
+
+        optional_args = self.collect_optional_args(dispatcher, update, check_result)
+        return self.callback(dispatcher.bot, update, **optional_args)
 
     def collect_additional_context(self, context, update, dispatcher, check_result):
         if isinstance(check_result, bool):

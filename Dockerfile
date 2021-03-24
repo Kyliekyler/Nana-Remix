@@ -65,7 +65,7 @@ RUN apt update && apt upgrade -y && \
 RUN pip3 install --upgrade pip setuptools
 
 # Copy Python Requirements to /root/DashaBot
-RUN git clone -b main https://github.com/Kyliekyler/Nana-Remix /root/DashaBot
+RUN git clone -b main https://github.com/Kyliekyler/DashaBot /root/DashaBot
 WORKDIR /root/DashaBot
 
 #Copy config file to /root/DashaBot/DashaBot

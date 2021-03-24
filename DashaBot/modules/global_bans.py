@@ -17,22 +17,17 @@ from telegram.utils.helpers import mention_html
 import DashaBot.modules.sql.global_bans_sql as sql
 from DashaBot.modules.sql.users_sql import get_user_com_chats
 from DashaBot import (
-    DEV_USERS,
     EVENT_LOGS,
     OWNER_ID,
     STRICT_GBAN,
-    DRAGONS,
     SUPPORT_CHAT,
     SPAMWATCH_SUPPORT_CHAT,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     sw,
     dispatcher,
 )
 from DashaBot.modules.helper_funcs.chat_status import (
     is_user_admin,
-    support_plus,
+    dev_plus,
     user_admin,
 )
 from DashaBot.modules.helper_funcs.extraction import (
@@ -73,7 +68,7 @@ UNGBAN_ERRORS = {
 
 
 @run_async
-@support_plus
+@dev_plus
 def gban(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     message = update.effective_message
@@ -87,32 +82,6 @@ def gban(update: Update, context: CallbackContext):
         message.reply_text(
             "You don't seem to be referring to a user or the ID specified is incorrect.."
         )
-        return
-
-    if int(user_id) in DEV_USERS:
-        message.reply_text(
-            "Sorry but this user seems to be one of my dev."
-        )
-        return
-
-    if int(user_id) in DRAGONS:
-        message.reply_text(
-            "No, no, no! This is user is a sudo user."
-        )
-        return
-
-    if int(user_id) in DEMONS:
-        message.reply_text(
-            "Oh no you can't! *grabs popcorn*"
-        )
-        return
-
-    if int(user_id) in TIGERS:
-        message.reply_text("Sorry, gban protected user.")
-        return
-
-    if int(user_id) in WOLVES:
-        message.reply_text("Sorry, gban protected user.")
         return
 
     if user_id == bot.id:
@@ -149,8 +118,7 @@ def gban(update: Update, context: CallbackContext):
         )
         if old_reason:
             message.reply_text(
-                "This user is already gbanned, for the following reason:\n"
-                "<code>{}</code>\n"
+                "This user is already gbanned, for the following reason: {}\n"
                 "I've gone and updated it with your new reason!".format(
                     html.escape(old_reason)
                 ),
@@ -201,7 +169,7 @@ def gban(update: Update, context: CallbackContext):
             )
 
     else:
-        send_to_list(bot, DRAGONS + DEMONS, log_message, html=True)
+        send_to_list(bot, log_message, html=True)
 
     sql.gban_user(user_id, user_chat.username or user_chat.first_name, reason)
 
@@ -232,7 +200,7 @@ def gban(update: Update, context: CallbackContext):
                     )
                 else:
                     send_to_list(
-                        bot, DRAGONS + DEMONS, f"Could not gban due to: {excp.message}"
+                        bot, f"Could not gban due to: {excp.message}"
                     )
                 sql.ungban_user(user_id)
                 return
@@ -247,7 +215,6 @@ def gban(update: Update, context: CallbackContext):
     else:
         send_to_list(
             bot,
-            DRAGONS + DEMONS,
             f"Gban complete! (User banned in <code>{gbanned_chats}</code> chats)",
             html=True,
         )
@@ -275,7 +242,7 @@ def gban(update: Update, context: CallbackContext):
 
 
 @run_async
-@support_plus
+@dev_plus
 def ungban(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     message = update.effective_message
@@ -330,7 +297,7 @@ def ungban(update: Update, context: CallbackContext):
                 + "\n\nFormatting has been disabled due to an unexpected error.",
             )
     else:
-        send_to_list(bot, DRAGONS + DEMONS, log_message, html=True)
+        send_to_list(bot, log_message, html=True)
 
     chats = get_user_com_chats(user_id)
     ungbanned_chats = 0
@@ -375,7 +342,7 @@ def ungban(update: Update, context: CallbackContext):
             parse_mode=ParseMode.HTML,
         )
     else:
-        send_to_list(bot, DRAGONS + DEMONS, "ungban complete!")
+        send_to_list(bot, "ungban complete!")
 
     end_time = time.time()
     ungban_time = round((end_time - start_time), 2)
@@ -388,7 +355,7 @@ def ungban(update: Update, context: CallbackContext):
 
 
 @run_async
-@support_plus
+@dev_plus
 def gbanlist(update: Update, context: CallbackContext):
     banned_users = sql.get_gban_list()
 
@@ -425,10 +392,8 @@ def check_and_ban(update, user_id, should_message=True):
         update.effective_chat.kick_member(user_id)
         if should_message:
             update.effective_message.reply_text(
-                f"<b>Alert</b>: This user is globally banned.\n"
-                f"<b>Appeal chat</b>: {SPAMWATCH_SUPPORT_CHAT}\n"
-                f"<b>User ID</b>: <code>{sw_ban.id}</code>\n"
-                f"<b>Ban Reason</b>: <code>{html.escape(sw_ban.reason)}</code>",
+                f"This user ({sw_ban.id}) is globally banned by spamwatch!"
+                f"Ban Reason: {html.escape(sw_ban.reason)}",
                 parse_mode=ParseMode.HTML,
             )
         return
@@ -437,13 +402,11 @@ def check_and_ban(update, user_id, should_message=True):
         update.effective_chat.kick_member(user_id)
         if should_message:
             text = (
-                f"<b>Alert</b>: This user is globally banned.\n"
-                f"<b>Appeal chat</b>: @{SUPPORT_CHAT}\n"
-                f"<b>User ID</b>: <code>{user_id}</code>"
+                f"This user ({user_id}) is globally banned!"
             )
             user = sql.get_gbanned_user(user_id)
             if user.reason:
-                text += f"\n<b>Ban Reason:</b> <code>{html.escape(user.reason)}</code>"
+                text += f"Ban Reason: {html.escape(user.reason)}"
             update.effective_message.reply_text(text, parse_mode=ParseMode.HTML)
 
 
@@ -504,7 +467,7 @@ def gbanstat(update: Update, context: CallbackContext):
 
 
 def __stats__():
-    return f"• {sql.num_gbanned_users()} gbanned users."
+    return f"- {sql.num_gbanned_users()} gbanned users."
 
 
 def __user_info__(user_id):
@@ -514,14 +477,11 @@ def __user_info__(user_id):
         return ""
     if user_id == dispatcher.bot.id:
         return ""
-    if int(user_id) in DRAGONS + TIGERS + WOLVES:
-        return ""
     if is_gbanned:
         text = text.format("Yes")
         user = sql.get_gbanned_user(user_id)
         if user.reason:
             text += f"\n<b>Reason:</b> <code>{html.escape(user.reason)}</code>"
-        text += f"\n<b>Appeal Chat:</b> @{SUPPORT_CHAT}"
     else:
         text = text.format("???")
     return text
@@ -553,7 +513,7 @@ dispatcher.add_handler(UNGBAN_HANDLER)
 dispatcher.add_handler(GBAN_LIST)
 dispatcher.add_handler(GBAN_STATUS)
 
-__mod_name__ = "Anti-Spam"
+__mod_name__ = "Antispam"
 __handlers__ = [GBAN_HANDLER, UNGBAN_HANDLER, GBAN_LIST, GBAN_STATUS]
 
 if STRICT_GBAN:  # enforce GBANS if this is set

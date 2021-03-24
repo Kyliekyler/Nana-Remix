@@ -11,7 +11,6 @@ from DashaBot.modules.helper_funcs.chat_status import (
     is_user_admin,
     user_admin,
     user_admin_no_reply,
-    can_delete,
 )
 from DashaBot.modules.helper_funcs.extraction import (
     extract_text,
@@ -70,7 +69,7 @@ def warn(
         if soft_warn:  # kick
             chat.unban_member(user.id)
             reply = (
-                f"Yeah you're right get out!"
+                f"Yeah you're right get out!\n"
                 f"Kicked {mention_html(user.id, user.first_name)}!\n"
                 f"Warn Count: {limit}"
             )
@@ -78,7 +77,7 @@ def warn(
         else:  # ban
             chat.kick_member(user.id)
             reply = (
-                f"Another one bites the dust..."
+                f"Another one bites the dust!\n"
                 f"Banned {mention_html(user.id, user.first_name)}!\n"
                 f"Warn Count: {limit}"
             )
@@ -109,12 +108,12 @@ def warn(
         )
 
         reply = (
-            f"Oopsies!"
-            f"Warned {mention_html(user.id, user.first_name)}!\n"
+            f"Oopsies!\n"
+            f"You have been warned {mention_html(user.id, user.first_name)}!\n"
             f"Warn Count: {num_warns}/{limit}"
         )
         if reason:
-            reply += f"\n<code> </code><b>•  Reason:</b> {html.escape(reason)}"
+            reply += f"\nReason: {html.escape(reason)}"
 
         log_reason = (
             f"<b>{html.escape(chat.title)}:</b>\n"
@@ -162,10 +161,9 @@ def button(update: Update, context: CallbackContext) -> str:
                 f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
                 f"<b>User:</b> {mention_html(user_member.user.id, user_member.user.first_name)}"
             )
-        else:
-            update.effective_message.edit_text(
-                "User already has no warns.", parse_mode=ParseMode.HTML
-            )
+        update.effective_message.edit_text(
+           "User already has no warns.", parse_mode=ParseMode.HTML
+        )
 
     return ""
 
@@ -195,10 +193,10 @@ def warn_user(update: Update, context: CallbackContext) -> str:
                 message.reply_to_message,
                 warner,
             )
-        else:
-            return warn(chat.get_member(user_id).user, chat, reason, message, warner)
-    else:
-        message.reply_text("That looks like an invalid User ID to me.")
+            
+        return warn(chat.get_member(user_id).user, chat, reason, message, warner)
+        
+    message.reply_text("That looks like an invalid User ID to me.")
     return ""
 
 
@@ -253,7 +251,7 @@ def warns(update: Update, context: CallbackContext):
                 update.effective_message.reply_text(msg)
         else:
             update.effective_message.reply_text(
-                f"User has {num_warns}/{limit} warns, but no reasons for any of them."
+                f"This user has {num_warns}/{limit} warns, but no reasons for any of them."
             )
     else:
         update.effective_message.reply_text("This user doesn't have any warns!")
@@ -421,26 +419,24 @@ def set_warn_strength(update: Update, context: CallbackContext):
     if args:
         if args[0].lower() in ("on", "yes"):
             sql.set_warn_strength(chat.id, False)
-            msg.reply_text("Too many warns will now result in a Ban!")
+            msg.reply_text("Too many warns will now result in a ban!")
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-                f"Has enabled strong warns. Users will be seriously kicked.(banned)"
+                f"Has enabled strong warns. Users will be banned."
             )
 
-        elif args[0].lower() in ("off", "no"):
+        if args[0].lower() in ("off", "no"):
             sql.set_warn_strength(chat.id, True)
             msg.reply_text(
-                "Too many warns will now result in a normal kick! Users will be able to join again after."
+                "Too many warns will now result in a kick! Users will be able to join again after."
             )
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
                 f"Has disabled strong kickes. I will use normal kick on users."
             )
-
-        else:
-            msg.reply_text("I only understand on/yes/no/off!")
+        msg.reply_text("I only understand on/yes/no/off!")
     else:
         limit, soft_warn = sql.get_warn_setting(chat.id)
         if soft_warn:
@@ -450,7 +446,7 @@ def set_warn_strength(update: Update, context: CallbackContext):
             )
         else:
             msg.reply_text(
-                "Warns are currently set to *Ban* users when they exceed the limits.",
+                "Warns are currently set to *ban* users when they exceed the limits.",
                 parse_mode=ParseMode.MARKDOWN,
             )
     return ""

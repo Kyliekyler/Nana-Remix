@@ -5,7 +5,7 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters, run_async
 from telegram.utils.helpers import mention_html
 
-from DashaBot import DRAGONS, dispatcher
+from DashaBot import OWNER_ID, dispatcher
 from DashaBot.modules.disable import DisableAbleCommandHandler
 from DashaBot.modules.helper_funcs.chat_status import (
     bot_admin,
@@ -42,7 +42,7 @@ def promote(update: Update, context: CallbackContext) -> str:
 
     if (
         not (promoter.can_promote_members or promoter.status == "creator")
-        and user.id not in DRAGONS
+        and user.id not in [OWNER_ID]
     ):
         message.reply_text("You don't have the necessary rights to do that!")
         return
@@ -116,10 +116,19 @@ def promote(update: Update, context: CallbackContext) -> str:
 def demote(update: Update, context: CallbackContext) -> str:
     bot = context.bot
     args = context.args
-
+    
     chat = update.effective_chat
     message = update.effective_message
     user = update.effective_user
+
+    promoter = chat.get_member(user.id)
+
+    if (
+        not (promoter.can_promote_members or promoter.status == "creator")
+        and user.id not in [OWNER_ID]
+    ):
+        message.reply_text("You don't have the necessary rights to do that!")
+        return
 
     user_id = extract_user(message, args)
     if not user_id:

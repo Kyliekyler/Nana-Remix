@@ -13,7 +13,7 @@ from DashaBot.__main__ import (
     USER_INFO,
     USER_SETTINGS,
 )
-from DashaBot.modules.helper_funcs.chat_status import dev_plus, sudo_plus
+from DashaBot.modules.helper_funcs.chat_status import dev_plus
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler, run_async
 
@@ -116,7 +116,8 @@ def unload(update: Update, context: CallbackContext):
             if isinstance(handler, bool):
                 unload_messasge.edit_text("This module can't be unloaded!")
                 return
-            elif not isinstance(handler, tuple):
+
+            if not isinstance(handler, tuple):
                 dispatcher.remove_handler(handler)
             else:
                 if isinstance(handler[0], collections.Callable):
@@ -160,7 +161,7 @@ def unload(update: Update, context: CallbackContext):
 
 
 @run_async
-@sudo_plus
+@dev_plus
 def listmodules(update: Update, context: CallbackContext):
     message = update.effective_message
     module_list = []

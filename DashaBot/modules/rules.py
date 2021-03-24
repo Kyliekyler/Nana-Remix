@@ -38,8 +38,8 @@ def send_rules(update, chat_id, from_pm=False):
                 "fix this.\nMaybe they forgot the hyphen in ID",
             )
             return
-        else:
-            raise
+
+        raise
 
     rules = sql.get_rules(chat_id)
     text = f"The rules for *{escape_markdown(chat.title)}* are:\n\n{rules}"
@@ -114,7 +114,7 @@ def clear_rules(update: Update, context: CallbackContext):
 
 
 def __stats__():
-    return f"• {sql.num_chats()} chats have rules set."
+    return f"- {sql.num_chats()} chats have rules set."
 
 
 def __import_data__(chat_id, data):

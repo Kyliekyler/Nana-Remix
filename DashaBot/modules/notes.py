@@ -4,7 +4,7 @@ import random
 from typing import Optional
 
 import DashaBot.modules.sql.notes_sql as sql
-from DashaBot import LOGGER, JOIN_LOGGER, SUPPORT_CHAT, dispatcher, DRAGONS
+from DashaBot import LOGGER, JOIN_LOGGER, SUPPORT_CHAT, dispatcher, OWNER_ID
 from DashaBot.modules.disable import DisableAbleCommandHandler
 from DashaBot.modules.helper_funcs.handlers import MessageHandlerChecker
 from DashaBot.modules.helper_funcs.chat_status import user_admin, connection_status
@@ -251,7 +251,7 @@ def slash_get(update: Update, context: CallbackContext):
         note_name = str(noteid).strip(">").split()[1]
         get(update, context, note_name, show_none=False)
     except IndexError:
-        update.effective_message.reply_text("Wrong Note ID")
+        update.effective_message.reply_text("Wrong Note ID!")
 
 
 @run_async
@@ -264,7 +264,7 @@ def save(update: Update, context: CallbackContext):
     note_name, text, data_type, content, buttons = get_note_type(msg)
     note_name = note_name.lower()
     if data_type is None:
-        msg.reply_text("Dude, there's no note")
+        msg.reply_text("There's no note in this chat")
         return
 
     sql.add_note_to_db(
@@ -272,7 +272,7 @@ def save(update: Update, context: CallbackContext):
     )
 
     msg.reply_text(
-        f"Yas! Added `{note_name}`.\nGet it with /get `{note_name}`, or `#{note_name}`",
+        f"Yes! Added `{note_name}`.\nGet it with /get `{note_name}`, or `#{note_name}`",
         parse_mode=ParseMode.MARKDOWN,
     )
 
@@ -314,7 +314,7 @@ def clearall(update: Update, context: CallbackContext):
     chat = update.effective_chat
     user = update.effective_user
     member = chat.get_member(user.id)
-    if member.status != "creator" and user.id not in DRAGONS:
+    if member.status != "creator" and user.id not in [OWNER_ID]:
         update.effective_message.reply_text(
             "Only the chat owner can clear all notes at once."
         )
@@ -343,7 +343,7 @@ def clearall_btn(update: Update, context: CallbackContext):
     message = update.effective_message
     member = chat.get_member(query.from_user.id)
     if query.data == "notes_rmall":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
+        if member.status == "creator" or query.from_user.id in [OWNER_ID]:
             note_list = sql.get_all_chat_notes(chat.id)
             try:
                 for notename in note_list:
@@ -355,16 +355,17 @@ def clearall_btn(update: Update, context: CallbackContext):
 
         if member.status == "administrator":
             query.answer("Only owner of the chat can do this.")
-
-        if member.status == "member":
+        elif member.status == "member":
             query.answer("You need to be admin to do this.")
+            
     elif query.data == "notes_cancel":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
+        if member.status == "creator" or query.from_user.id in [OWNER_ID]:
             message.edit_text("Clearing of all notes has been cancelled.")
             return
+
         if member.status == "administrator":
             query.answer("Only owner of the chat can do this.")
-        if member.status == "member":
+        elif member.status == "member":
             query.answer("You need to be admin to do this.")
 
 
@@ -519,7 +520,7 @@ __help__ = """
 *Commands for Anyone:*
 - `/get <notename>`*:* Get the note with this notename
 - `#<notename>`*:* Same as /get
-- `/notes``*:* List all saved notes in this chat
+- `/notes`*:* List all saved notes in this chat
 - `/saved`*:* Same as /notes
 - `/number`*:* Will pull the note of that number in the list
 - `/get <notename> noformat`*:* Get the note without formatting

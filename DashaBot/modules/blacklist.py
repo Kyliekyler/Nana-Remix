@@ -85,8 +85,8 @@ def add_blacklist(update, context):
         chat_id = update.effective_chat.id
         if chat.type == "private":
             return
-        else:
-            chat_name = chat.title
+
+        chat_name = chat.title
 
     if len(words) > 1:
         text = words[1]
@@ -138,8 +138,8 @@ def unblacklist(update, context):
         chat_id = update.effective_chat.id
         if chat.type == "private":
             return
-        else:
-            chat_name = chat.title
+
+        chat_name = chat.title
 
     if len(words) > 1:
         text = words[1]
@@ -245,30 +245,24 @@ def blacklist_mode(update, context):
             sql.set_blacklist_strength(chat_id, 5, "0")
         elif args[0].lower() == "tban":
             if len(args) == 1:
-                teks = """It looks like you tried to set time value for blacklist but you didn't specified time; Try, `/blacklistmode tban <timevalue>`.
-				
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """It looks like you tried to set time value for blacklist but you didn't specified time; Try, `/blacklistmode tban <timevalue>`."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             restime = extract_time(msg, args[1])
             if not restime:
-                teks = """Invalid time value!
-Example of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Invalid time value!"""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             settypeblacklist = "temporarily ban for {}".format(args[1])
             sql.set_blacklist_strength(chat_id, 6, str(args[1]))
         elif args[0].lower() == "tmute":
             if len(args) == 1:
-                teks = """It looks like you tried to set time value for blacklist but you didn't specified  time; try, `/blacklistmode tmute <timevalue>`.
-
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """It looks like you tried to set time value for blacklist but you didn't specified  time; try, `/blacklistmode tmute <timevalue>`."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             restime = extract_time(msg, args[1])
             if not restime:
-                teks = """Invalid time value!
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Invalid time value!"""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             settypeblacklist = "temporarily mute for {}".format(args[1])
@@ -295,31 +289,32 @@ Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks.
                 settypeblacklist,
             )
         )
+
+    getmode, getvalue = sql.get_blacklist_setting(chat.id)
+    if getmode == 0:
+        settypeblacklist = "do nothing"
+    elif getmode == 1:
+        settypeblacklist = "delete"
+    elif getmode == 2:
+        settypeblacklist = "warn"
+    elif getmode == 3:
+        settypeblacklist = "mute"
+    elif getmode == 4:
+        settypeblacklist = "kick"
+    elif getmode == 5:
+        settypeblacklist = "ban"
+    elif getmode == 6:
+        settypeblacklist = "temporarily ban for {}".format(getvalue)
+    elif getmode == 7:
+        settypeblacklist = "temporarily mute for {}".format(getvalue)
+        
+    if conn:
+        text = "Current blacklistmode: *{}* in *{}*.".format(
+            settypeblacklist, chat_name
+        )
     else:
-        getmode, getvalue = sql.get_blacklist_setting(chat.id)
-        if getmode == 0:
-            settypeblacklist = "do nothing"
-        elif getmode == 1:
-            settypeblacklist = "delete"
-        elif getmode == 2:
-            settypeblacklist = "warn"
-        elif getmode == 3:
-            settypeblacklist = "mute"
-        elif getmode == 4:
-            settypeblacklist = "kick"
-        elif getmode == 5:
-            settypeblacklist = "ban"
-        elif getmode == 6:
-            settypeblacklist = "temporarily ban for {}".format(getvalue)
-        elif getmode == 7:
-            settypeblacklist = "temporarily mute for {}".format(getvalue)
-        if conn:
-            text = "Current blacklistmode: *{}* in *{}*.".format(
-                settypeblacklist, chat_name
-            )
-        else:
-            text = "Current blacklistmode: *{}*.".format(settypeblacklist)
-        send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
+        text = "Current blacklistmode: *{}*.".format(settypeblacklist)
+    send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
     return ""
 
 
@@ -351,7 +346,7 @@ def del_blacklist(update, context):
             try:
                 if getmode == 0:
                     return
-                elif getmode == 1:
+                if getmode == 1:
                     try:
                         message.delete()
                     except BadRequest:
@@ -444,7 +439,7 @@ def __chat_settings__(chat_id, user_id):
 
 
 def __stats__():
-    return "• {} blacklist triggers, across {} chats.".format(
+    return "- {} blacklist triggers, across {} chats.".format(
         sql.num_blacklist_filters(), sql.num_blacklist_filter_chats()
     )
 
@@ -454,15 +449,21 @@ __mod_name__ = "Blacklists"
 __help__ = """
 *Command for Anyone:*
 - `/blacklist`*:* View the current blacklisted words
+- `/blsticker`*:* See current blacklisted sticker
 
 *Commands for Admins:*
 - `/addblacklist`*:* Add a trigger to the blacklist
 - `/unblacklist`*:* Remove a trigger from the blacklist
 - `/blacklistmode <off/del/warn/ban/kick/mute/tban/tmute>`*:* Action to perform when someone sends blacklisted words
+- `/addblsticker <sticker link>`*:* Add the sticker trigger to the black list. Can be added via reply sticker
+- `/unblsticker <sticker link>`*:* Remove triggers from blacklist. The same newline logic applies here, so you can delete multiple triggers at once
+- `/rmblsticker <sticker link>`*:* Same as above
+- `/blstickermode <delete/ban/tban/mute/tmute>`*:* Sets up a default action on what to do if users use blacklisted stickers
 
 *Notes:*
 - Each line is considered one trigger, so using different lines will allow you to add multiple triggers
 - Admins and approved members are not affected by blacklist
+- `<sticker link>` can be `https://t.me/addstickers/<sticker>` or just `<sticker>` or reply to the sticker message
 - For tban and tmute at blacklist action you should specify the time (i.e 5m, 1h, 2d, 3w)
 """
 BLACKLIST_HANDLER = DisableAbleCommandHandler(

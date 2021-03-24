@@ -12,14 +12,12 @@ from telegram.ext import (
 )
 
 import DashaBot.modules.sql.users_sql as sql
-from DashaBot import DEV_USERS, LOGGER, OWNER_ID, dispatcher
-from DashaBot.modules.helper_funcs.chat_status import dev_plus, sudo_plus
+from DashaBot import LOGGER, OWNER_ID, dispatcher
+from DashaBot.modules.helper_funcs.chat_status import dev_plus
 from DashaBot.modules.sql.users_sql import get_all_users
 
 USERS_GROUP = 4
 CHAT_GROUP = 5
-DEV_AND_MORE = DEV_USERS.append(int(OWNER_ID))
-
 
 def get_user_id(username):
     # ensure valid userid
@@ -34,21 +32,20 @@ def get_user_id(username):
     if not users:
         return None
 
-    elif len(users) == 1:
+    if len(users) == 1:
         return users[0].user_id
 
-    else:
-        for user_obj in users:
-            try:
-                userdat = dispatcher.bot.get_chat(user_obj.user_id)
-                if userdat.username == username:
-                    return userdat.id
+    for user_obj in users:
+        try:
+            userdat = dispatcher.bot.get_chat(user_obj.user_id)
+            if userdat.username == username:
+                return userdat.id
 
-            except BadRequest as excp:
-                if excp.message == "Chat not found":
-                    pass
-                else:
-                    LOGGER.exception("Error extracting user ID")
+        except BadRequest as excp:
+            if excp.message == "Chat not found":
+                pass
+            else:
+                LOGGER.exception("Error extracting user ID")
 
     return None
 
@@ -120,7 +117,7 @@ def log_user(update: Update, context: CallbackContext):
 
 
 @run_async
-@sudo_plus
+@dev_plus
 def chats(update: Update, context: CallbackContext):
     all_chats = sql.get_all_chats() or []
     chatfile = "List of chats.\n0. Chat name | Chat ID | Members count\n"
@@ -166,7 +163,7 @@ def __user_info__(user_id):
 
 
 def __stats__():
-    return f"• {sql.num_users()} users, across {sql.num_chats()} chats"
+    return f"- {sql.num_users()} users, across {sql.num_chats()} chats"
 
 
 def __migrate__(old_chat_id, new_chat_id):

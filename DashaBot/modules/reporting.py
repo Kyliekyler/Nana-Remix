@@ -1,6 +1,6 @@
 import html
 
-from DashaBot import LOGGER, DRAGONS, TIGERS, WOLVES, dispatcher
+from DashaBot import LOGGER, OWNER_ID, dispatcher
 from DashaBot.modules.helper_funcs.chat_status import user_admin, user_not_admin
 from DashaBot.modules.log_channel import loggable
 from DashaBot.modules.sql import reporting_sql as sql
@@ -17,7 +17,7 @@ from telegram.ext import (
 from telegram.utils.helpers import mention_html
 
 REPORT_GROUP = 12
-REPORT_IMMUNE_USERS = DRAGONS + TIGERS + WOLVES
+REPORT_IMMUNE_USERS = OWNER_ID
 
 
 @run_async
@@ -94,7 +94,7 @@ def report(update: Update, context: CallbackContext) -> str:
             return ""
 
         if reported_user.id in REPORT_IMMUNE_USERS:
-            message.reply_text("Uh? You reporting a disaster?")
+            message.reply_text("Uhh.. You're reporting my owner?")
             return ""
 
         if chat.username and chat.type == Chat.SUPERGROUP:
@@ -103,8 +103,8 @@ def report(update: Update, context: CallbackContext) -> str:
 
             msg = (
                 f"<b>Report: </b>{html.escape(chat.title)}\n"
-                f"<b> • Report by:</b> {mention_html(user.id, user.first_name)}(<code>{user.id}</code>)\n"
-                f"<b> • Reported user:</b> {mention_html(reported_user.id, reported_user.first_name)} (<code>{reported_user.id}</code>)\n"
+                f"<b> - Report by:</b> {mention_html(user.id, user.first_name)}(<code>{user.id}</code>)\n"
+                f"<b> - Reported user:</b> {mention_html(reported_user.id, reported_user.first_name)} (<code>{reported_user.id}</code>)\n"
             )
             link = f'<b> • Reported message:</b> <a href="https://t.me/{chat.username}/{message.reply_to_message.message_id}">click here</a>'
             should_forward = False

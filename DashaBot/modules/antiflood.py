@@ -4,7 +4,7 @@ import re
 
 from telegram import Message, Chat, Update, User, ChatPermissions
 
-from DashaBot import TIGERS, WOLVES, dispatcher
+from DashaBot import dispatcher
 from DashaBot.modules.helper_funcs.chat_status import (
     bot_admin,
     is_user_admin,
@@ -22,7 +22,7 @@ from telegram.ext import (
     MessageHandler,
     run_async,
 )
-from telegram.utils.helpers import mention_html, escape_markdown
+from telegram.utils.helpers import mention_html
 from DashaBot.modules.helper_funcs.string_handling import extract_time
 from DashaBot.modules.connection import connected
 from DashaBot.modules.helper_funcs.alternate import send_message
@@ -41,7 +41,7 @@ def check_flood(update, context) -> str:
         return ""
 
     # ignore admins and whitelists
-    if is_user_admin(chat, user.id) or user.id in WOLVES or user.id in TIGERS:
+    if is_user_admin(chat, user.id):
         sql.update_flood(chat.id, None)
         return ""
     # ignore approved users
@@ -197,33 +197,32 @@ def set_flood(update, context) -> str:
                     )
                 )
 
-            elif amount <= 3:
+            if amount <= 3:
                 send_message(
                     update.effective_message,
                     "Antiflood must be either 0 (disabled) or number greater than 3!",
                 )
                 return ""
 
+            sql.set_flood(chat_id, amount)
+            if conn:
+                text = message.reply_text(
+                    "Anti-flood has been set to {} in chat: {}".format(
+                        amount, chat_name
+                    )
+                )
             else:
-                sql.set_flood(chat_id, amount)
-                if conn:
-                    text = message.reply_text(
-                        "Anti-flood has been set to {} in chat: {}".format(
-                            amount, chat_name
-                        )
-                    )
-                else:
-                    text = message.reply_text(
-                        "Successfully updated antiflood limit to {}!".format(amount)
-                    )
-                return (
-                    "<b>{}:</b>"
-                    "\n#SETFLOOD"
-                    "\n<b>Admin:</b> {}"
-                    "\nSet antiflood to <code>{}</code>.".format(
-                        html.escape(chat_name),
-                        mention_html(user.id, html.escape(user.first_name)),
-                        amount,
+                text = message.reply_text(
+                    "Successfully updated antiflood limit to {}!".format(amount)
+                )
+            return (
+                "<b>{}:</b>"
+                "\n#SETFLOOD"
+                "\n<b>Admin:</b> {}"
+                "\nSet antiflood to <code>{}</code>.".format(
+                html.escape(chat_name),
+                    mention_html(user.id, html.escape(user.first_name)),
+                    amount,
                     )
                 )
 
@@ -358,30 +357,30 @@ def set_flood_mode(update, context):
                 mention_html(user.id, html.escape(user.first_name)),
             )
         )
+        
+    getmode, getvalue = sql.get_flood_setting(chat.id)
+    if getmode == 1:
+        settypeflood = "ban"
+    elif getmode == 2:
+        settypeflood = "kick"
+    elif getmode == 3:
+        settypeflood = "mute"
+    elif getmode == 4:
+        settypeflood = "tban for {}".format(getvalue)
+    elif getmode == 5:
+        settypeflood = "tmute for {}".format(getvalue)
+    if conn:
+        text = msg.reply_text(
+            "Sending more messages than flood limit will result in {} in {}.".format(
+                settypeflood, chat_name
+            )
+        )
     else:
-        getmode, getvalue = sql.get_flood_setting(chat.id)
-        if getmode == 1:
-            settypeflood = "ban"
-        elif getmode == 2:
-            settypeflood = "kick"
-        elif getmode == 3:
-            settypeflood = "mute"
-        elif getmode == 4:
-            settypeflood = "tban for {}".format(getvalue)
-        elif getmode == 5:
-            settypeflood = "tmute for {}".format(getvalue)
-        if conn:
-            text = msg.reply_text(
-                "Sending more messages than flood limit will result in {} in {}.".format(
-                    settypeflood, chat_name
-                )
+        text = msg.reply_text(
+            "Sending more message than flood limit will result in {}.".format(
+                settypeflood
             )
-        else:
-            text = msg.reply_text(
-                "Sending more message than flood limit will result in {}.".format(
-                    settypeflood
-                )
-            )
+        )
     return ""
 
 

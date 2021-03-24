@@ -1,24 +1,12 @@
-from DashaBot import DEV_USERS, DRAGONS, DEMONS
+from DashaBot import OWNER_ID
 from telegram import Message
 from telegram.ext import BaseFilter
 
 
-class CustomFilters(object):
-    class _Supporters(BaseFilter):
-        def filter(self, message: Message):
-            return bool(message.from_user and message.from_user.id in DEMONS)
-
-    support_filter = _Supporters()
-
-    class _Sudoers(BaseFilter):
-        def filter(self, message: Message):
-            return bool(message.from_user and message.from_user.id in DRAGONS)
-
-    sudo_filter = _Sudoers()
-
+class CustomFilters(object): 
     class _Developers(BaseFilter):
         def filter(self, message: Message):
-            return bool(message.from_user and message.from_user.id in DEV_USERS)
+            return bool(message.from_user and message.from_user.id in [OWNER_ID])
 
     dev_filter = _Developers()
 

@@ -20,7 +20,7 @@ CurrencyConverter
 google_trans_new
 jikanpy
 speedtest-cli
-coffeehouse
+git+https://github.com/intellivoid/CoffeeHouse-Python-API-Wrapper
 regex
 bleach
 git+https://github.com/starry69/python-markdown2.git

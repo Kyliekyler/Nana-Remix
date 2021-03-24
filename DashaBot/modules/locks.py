@@ -10,7 +10,7 @@ from telegram.utils.helpers import mention_html
 from alphabet_detector import AlphabetDetector
 
 import DashaBot.modules.sql.locks_sql as sql
-from DashaBot import dispatcher, DRAGONS, LOGGER
+from DashaBot import dispatcher, OWNER_ID, LOGGER
 from DashaBot.modules.disable import DisableAbleCommandHandler
 from DashaBot.modules.helper_funcs.chat_status import (
     can_delete,
@@ -98,7 +98,7 @@ def restr_members(
     bot, chat_id, members, messages=False, media=False, other=False, previews=False
 ):
     for mem in members:
-        if mem.user in DRAGONS:
+        if mem.user in [OWNER_ID]:
             pass
         try:
             bot.restrict_chat_member(
@@ -189,7 +189,7 @@ def lock(update, context) -> str:
                     )
                 )
 
-            elif ltype in LOCK_CHAT_RESTRICTION:
+            if ltype in LOCK_CHAT_RESTRICTION:
                 # Connection check
                 conn = connected(context.bot, update, chat, user.id, need_admin=True)
                 if conn:
@@ -232,11 +232,10 @@ def lock(update, context) -> str:
                     )
                 )
 
-            else:
-                send_message(
-                    update.effective_message,
-                    "What are you trying to lock...? Try /locktypes for the list of lockables",
-                )
+            send_message(
+                update.effective_message,
+                "What are you trying to lock...? Try /locktypes for the list of lockables",
+            )
         else:
             send_message(update.effective_message, "What are you trying to lock...?")
 
@@ -293,7 +292,7 @@ def unlock(update, context) -> str:
                     )
                 )
 
-            elif ltype in UNLOCK_CHAT_RESTRICTION:
+            if ltype in UNLOCK_CHAT_RESTRICTION:
                 # Connection check
                 conn = connected(context.bot, update, chat, user.id, need_admin=True)
                 if conn:
@@ -343,11 +342,11 @@ def unlock(update, context) -> str:
                         ltype,
                     )
                 )
-            else:
-                send_message(
-                    update.effective_message,
-                    "What are you trying to unlock...? Try /locktypes for the list of lockables.",
-                )
+                
+            send_message(
+                update.effective_message,
+                "What are you trying to unlock...? Try /locktypes for the list of lockables.",
+            )
 
         else:
             send_message(update.effective_message, "What are you trying to unlock...?")

@@ -6,7 +6,7 @@ from telegram.error import BadRequest, Unauthorized
 from telegram.ext import CommandHandler, CallbackQueryHandler, run_async
 
 import DashaBot.modules.sql.connection_sql as sql
-from DashaBot import dispatcher, DRAGONS, DEV_USERS
+from DashaBot import dispatcher, OWNER_ID
 from DashaBot.modules.helper_funcs import chat_status
 from DashaBot.modules.helper_funcs.alternate import send_message, typing_action
 
@@ -121,7 +121,7 @@ def connect_chat(update, context):
             ismember = getstatusadmin.status in ("member")
             isallow = sql.allow_connect_to_chat(connect_chat)
 
-            if (isadmin) or (isallow and ismember) or (user.id in DRAGONS):
+            if (isadmin) or (isallow and ismember) or (user.id in [OWNER_ID]):
                 connection_status = sql.connect(
                     update.effective_message.from_user.id, connect_chat
                 )
@@ -149,10 +149,10 @@ def connect_chat(update, context):
             if gethistory:
                 buttons = [
                     InlineKeyboardButton(
-                        text="❎ Close button", callback_data="connect_close"
+                        text="Close button", callback_data="connect_close"
                     ),
                     InlineKeyboardButton(
-                        text="🧹 Clear history", callback_data="connect_clear"
+                        text="Clear history", callback_data="connect_clear"
                     ),
                 ]
             else:
@@ -216,7 +216,7 @@ def connect_chat(update, context):
         isadmin = getstatusadmin.status in ("administrator", "creator")
         ismember = getstatusadmin.status in ("member")
         isallow = sql.allow_connect_to_chat(chat.id)
-        if (isadmin) or (isallow and ismember) or (user.id in DRAGONS):
+        if (isadmin) or (isallow and ismember) or (user.id in [OWNER_ID]):
             connection_status = sql.connect(
                 update.effective_message.from_user.id, chat.id
             )
@@ -278,21 +278,19 @@ def connected(bot: Bot, update: Update, chat, user_id, need_admin=True):
         if (
             (isadmin)
             or (isallow and ismember)
-            or (user.id in DRAGONS)
-            or (user.id in DEV_USERS)
+            or (user.id in [OWNER_ID])
         ):
             if need_admin is True:
                 if (
                     getstatusadmin.status in ("administrator", "creator")
-                    or user_id in DRAGONS
-                    or user.id in DEV_USERS
+                    or user_id in [OWNER_ID]
                 ):
                     return conn_id
-                else:
-                    send_message(
-                        update.effective_message,
-                        "You must be an admin in the connected group!",
-                    )
+
+                send_message(
+                    update.effective_message,
+                    "You must be an admin in the connected group!",
+                )
             else:
                 return conn_id
         else:
@@ -306,16 +304,16 @@ def connected(bot: Bot, update: Update, chat, user_id, need_admin=True):
 
 
 CONN_HELP = """
- Actions are available with connected groups:
- • View and edit Notes.
- • View and edit Filters.
- • Get invite link of chat.
- • Set and control AntiFlood settings.
- • Set and control Blacklist settings.
- • Set Locks and Unlocks in chat.
- • Enable and Disable commands in chat.
- • Export and Imports of chat backup.
- • More in future!"""
+Actions are available with connected groups:
+- View and edit Notes.
+- View and edit Filters.
+- Get invite link of chat.
+- Set and control AntiFlood settings.
+- Set and control Blacklist settings.
+- Set Locks and Unlocks in chat.
+- Enable and Disable commands in chat.
+- Export and Imports of chat backup.
+- More in future!"""
 
 
 @run_async
@@ -326,8 +324,8 @@ def help_connect_chat(update, context):
     if update.effective_message.chat.type != "private":
         send_message(update.effective_message, "PM me with that command to get help.")
         return
-    else:
-        send_message(update.effective_message, CONN_HELP, parse_mode="markdown")
+
+    send_message(update.effective_message, CONN_HELP, parse_mode="markdown")
 
 
 @run_async
@@ -349,7 +347,7 @@ def connect_button(update, context):
         ismember = getstatusadmin.status in ("member")
         isallow = sql.allow_connect_to_chat(target_chat)
 
-        if (isadmin) or (isallow and ismember) or (user.id in DRAGONS):
+        if (isadmin) or (isallow and ismember) or (user.id in [OWNER_ID]):
             connection_status = sql.connect(query.from_user.id, target_chat)
 
             if connection_status:

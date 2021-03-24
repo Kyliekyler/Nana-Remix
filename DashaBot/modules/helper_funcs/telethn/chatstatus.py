@@ -1,5 +1,5 @@
 from DashaBot.modules.helper_funcs.telethn import IMMUNE_USERS, telethn
-from DashaBot import DRAGONS
+from DashaBot import OWNER_ID
 from telethon.tl.types import ChannelParticipantsAdmins
 
 
@@ -25,7 +25,7 @@ async def user_is_admin(user_id: int, message):
     async for user in telethn.iter_participants(
         message.chat_id, filter=ChannelParticipantsAdmins
     ):
-        if user_id == user.id or user_id in DRAGONS:
+        if user_id == user.id or user_id in [OWNER_ID]:
             status = True
             break
     return status
@@ -36,7 +36,7 @@ async def is_user_admin(user_id: int, chat_id):
     async for user in telethn.iter_participants(
         chat_id, filter=ChannelParticipantsAdmins
     ):
-        if user_id == user.id or user_id in DRAGONS:
+        if user_id == user.id or user_id in [OWNER_ID]:
             status = True
             break
     return status
@@ -102,8 +102,9 @@ async def can_delete_messages(message):
 
     if message.is_private:
         return True
-    elif message.chat.admin_rights:
+
+    if message.chat.admin_rights:
         status = message.chat.admin_rights.delete_messages
         return status
-    else:
-        return False
+
+    return False

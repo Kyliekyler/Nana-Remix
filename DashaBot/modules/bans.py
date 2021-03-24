@@ -6,13 +6,8 @@ from telegram.ext import CallbackContext, CommandHandler, Filters, run_async
 from telegram.utils.helpers import mention_html
 
 from DashaBot import (
-    DEV_USERS,
     LOGGER,
     OWNER_ID,
-    DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 from DashaBot.modules.disable import DisableAbleCommandHandler
@@ -62,27 +57,9 @@ def ban(update: Update, context: CallbackContext) -> str:
         message.reply_text("Oh yeah, ban myself, noob!")
         return log_message
 
-    if is_user_ban_protected(chat, user_id, member) and user not in DEV_USERS:
+    if is_user_ban_protected(chat, user_id, member) and user not in [OWNER_ID]:
         if user_id == OWNER_ID:
             message.reply_text("Hey! That's my owner, I cant ban him")
-        elif user_id in DEV_USERS:
-            message.reply_text("Sorry but this user seems to be one of my dev.")
-        elif user_id in DRAGONS:
-            message.reply_text(
-                "No, no, no! This is user is a sudo user."
-            )
-        elif user_id in DEMONS:
-            message.reply_text(
-                "Get help from @DashaBotSupport if you insist banning this user."
-            )
-        elif user_id in TIGERS:
-            message.reply_text(
-                "Get help from @DashaBotSupport if you insist banning this user."
-            )
-        elif user_id in WOLVES:
-            message.reply_text(
-                "Get help from @DashaBotSupport if you insist banning this user."
-            )
         else:
             message.reply_text("This user has immunity and cannot be banned.")
         return log_message
@@ -112,7 +89,7 @@ def ban(update: Update, context: CallbackContext) -> str:
 
         # bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         reply = (
-            f"Another one bites the dust..."
+            f"Another one bites the dust!\n"
             f"Banned {mention_html(member.user.id, html.escape(member.user.first_name))}."
         )
         if reason:
@@ -127,16 +104,16 @@ def ban(update: Update, context: CallbackContext) -> str:
                 return log
             message.reply_text("Banned!", quote=False)
             return log
-        else:
-            LOGGER.warning(update)
-            LOGGER.exception(
-                "ERROR banning user %s in chat %s (%s) due to %s",
-                user_id,
-                chat.title,
-                chat.id,
-                excp.message,
-            )
-            message.reply_text("Uhh, that didn't work...")
+
+        LOGGER.warning(update)
+        LOGGER.exception(
+            "ERROR banning user %s in chat %s (%s) due to %s",
+            user_id,
+            chat.title,
+            chat.id,
+            excp.message,
+        )
+        message.reply_text("Uhh, that didn't work...")
 
     return log_message
 
@@ -216,17 +193,17 @@ def temp_ban(update: Update, context: CallbackContext) -> str:
                 f"Banned! User will be banned for {time_val}.", quote=False
             )
             return log
-        else:
-            LOGGER.warning(update)
-            LOGGER.exception(
-                "ERROR banning user %s in chat %s (%s) due to %s",
-                user_id,
-                chat.title,
-                chat.id,
-                excp.message,
-            )
-            message.reply_text("Well damn, I can't ban that user.")
 
+        LOGGER.warning(update)
+        LOGGER.exception(
+            "ERROR banning user %s in chat %s (%s) due to %s",
+            user_id,
+            chat.title,
+            chat.id,
+            excp.message,
+        )
+        message.reply_text("Well damn, I can't ban that user.")
+            
     return log_message
 
 
@@ -284,8 +261,7 @@ def kick(update: Update, context: CallbackContext) -> str:
 
         return log
 
-    else:
-        message.reply_text("Well damn, I can't kick that user.")
+    message.reply_text("Well damn, I can't kick that user.")
 
     return log_message
 
@@ -381,8 +357,8 @@ def selfunban(context: CallbackContext, update: Update) -> str:
         if excp.message == "User not found":
             message.reply_text("I can't seem to find this user.")
             return
-        else:
-            raise
+
+        raise
 
     if is_user_in_chat(chat, user.id):
         message.reply_text("Aren't you already in the chat???")

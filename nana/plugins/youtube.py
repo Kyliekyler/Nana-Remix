@@ -2,6 +2,7 @@ import os
 import time
 from pathlib import Path
 
+from PIL import Image
 from pyrogram import filters
 from youtube_dl import YoutubeDL
 from youtube_dl.utils import ContentTooShortError
@@ -44,7 +45,7 @@ async def youtube_download(client, message):
         return
     url = args[1]
     opts = {
-        'format': 'best',
+        'format': 'bestvideo+bestaudio',
         'addmetadata': True,
         'key': 'FFmpegMetadata',
         'writethumbnail': True,
@@ -106,17 +107,27 @@ async def youtube_download(client, message):
             message, text='`There was an error during info extraction.`',
         )
         return
-    thumbnail = Path(f"{ytdl_data['id']}.jpg")
+    thumbnail = Path(f"{ytdl_data['thumbnails'][-1]['filename']}")
+    im = Image.open(Path(thumbnail)).convert("RGB")
+    width, height = im.size
+    im = im.resize((width // 6, height // 6))
+    im.save(Path(f"{ytdl_data['id']}.jpeg"))
+    os.remove(thumbnail)
+    thumbnail = Path(f"{ytdl_data['id']}.jpeg")
     c_time = time.time()
+    caption = f"<a href={url}>{ytdl_data['title']}</a>"
     try:
         await message.reply_video(
             f"{ytdl_data['id']}.mp4",
             supports_streaming=True,
             duration=ytdl_data['duration'],
-            caption=ytdl_data['title'],
+            caption=caption,
             thumb=thumbnail,
+            width=ytdl_data['width'],
+            height=ytdl_data['height'],
+            parse_mode="HTML",
             progress=lambda d, t: client.loop.create_task(
-                progressdl(d, t, message, c_time, 'Downloading...'),
+                progressdl(d, t, message, c_time, 'Uploading...'),
             ),
         ),
     except FileNotFoundError:
@@ -124,11 +135,15 @@ async def youtube_download(client, message):
             f"{ytdl_data['id']}.mp4",
             supports_streaming=True,
             duration=ytdl_data['duration'],
-            caption=ytdl_data['title'],
+            caption=caption,
+            width=ytdl_data['width'],
+            height=ytdl_data['height'],
+            parse_mode="HTML",
             progress=lambda d, t: client.loop.create_task(
-                progressdl(d, t, message, c_time, 'Downloading...'),
+                progressdl(d, t, message, c_time, 'Uploading...'),
             ),
         ),
+        pass
     os.remove(f"{ytdl_data['id']}.mp4")
     if thumbnail:
         os.remove(thumbnail)
@@ -208,25 +223,34 @@ async def youtube_music(client, message):
             message, text='`There was an error during info extraction.`',
         )
         return
-    thumbnail = Path(f"{ytdl_data['id']}.jpg")
+    thumbnail = Path(f"{ytdl_data['thumbnails'][-1]['filename']}")
+    im = Image.open(Path(thumbnail)).convert("RGB")
+    width, height = im.size
+    im = im.resize((width // 6, height // 6))
+    im.save(Path(f"{ytdl_data['id']}.jpeg"))
+    os.remove(thumbnail)
+    thumbnail = Path(f"{ytdl_data['id']}.jpeg")
     c_time = time.time()
+    caption = f"<a href={url}>{ytdl_data['title']}</a>"
     try:
         await message.reply_audio(
             f"{ytdl_data['id']}.mp3",
             duration=ytdl_data['duration'],
-            caption=ytdl_data['title'],
+            caption=caption,
             thumb=thumbnail,
+            parse_mode="HTML",
             progress=lambda d, t: client.loop.create_task(
-                progressdl(d, t, message, c_time, 'Downloading...'),
+                progressdl(d, t, message, c_time, 'Uploading...'),
             ),
         ),
     except FileNotFoundError:
         await message.reply_audio(
             f"{ytdl_data['id']}.mp3",
             duration=ytdl_data['duration'],
-            caption=ytdl_data['title'],
+            caption=caption,
+            parse_mode="HTML",
             progress=lambda d, t: client.loop.create_task(
-                progressdl(d, t, message, c_time, 'Downloading...'),
+                progressdl(d, t, message, c_time, 'Uploading...'),
             ),
         ),
     os.remove(f"{ytdl_data['id']}.mp3")

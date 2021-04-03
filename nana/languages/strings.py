@@ -25,11 +25,18 @@ LANGUAGES = [
     'tr',
 ]
 
-strings = {
-    i: yaml.full_load(
-        open('locales/' + i + '.yml'),
-    ) for i in LANGUAGES
-}
+try:
+    strings = {
+        i: yaml.full_load(
+            open('locales/' + i + '.yml'),
+        ) for i in LANGUAGES
+    }
+except UnicodeDecodeError:
+    strings = {
+        i: yaml.full_load(
+            open('locales/' + i + '.yml', encoding='utf8'),
+        ) for i in LANGUAGES
+    }
 
 
 def tld(t, _show_none=True):

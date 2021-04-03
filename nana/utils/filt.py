@@ -5,7 +5,9 @@ import re
 from pyrogram.filters import create
 from pyrogram.types import Message
 
-from nana import COMMAND_PREFIXES, BotUsername
+from nana import BotUsername
+
+COMMAND_PREFIXES = ['/', '!']
 
 
 def command(

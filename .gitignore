@@ -126,3 +126,5 @@ config.ini
 *.jpg
 *.log
 nana/downloads/*
+.vscode/settings.json
+proj/*

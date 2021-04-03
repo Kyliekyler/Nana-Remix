@@ -14,6 +14,7 @@ from nana import DB_AVAILABLE
 from nana import NANA_IMG
 from nana import Owner
 from nana import setbot
+from nana.utils import filt
 from nana.plugins.assistant.database.stickers_db import set_stanim_set
 from nana.plugins.assistant.database.stickers_db import set_sticker_set
 from nana.utils.dynamic_filt import dynamic_data_filter
@@ -25,7 +26,7 @@ TODEL = {}
 
 @setbot.on_message(
     filters.user(AdminSettings) &
-    filters.command(['setsticker']),
+    filt.command(['setsticker']),
 )
 async def get_stickers(_, message):
     if not DB_AVAILABLE:
@@ -50,7 +51,7 @@ async def get_stickers(_, message):
 
 @setbot.on_message(
     filters.user(AdminSettings) &
-    filters.command(['setanimation']),
+    filt.command(['setanimation']),
 )
 async def get_stickers_animation(_, message):
     if not DB_AVAILABLE:

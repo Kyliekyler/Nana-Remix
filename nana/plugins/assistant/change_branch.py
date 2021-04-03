@@ -3,7 +3,7 @@ from asyncio import create_subprocess_exec
 from asyncio import sleep
 
 from git import Repo
-from git.exc import GitCommandError
+from git.exc import GitCommandError, InvalidGitRepositoryError
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton
 from pyrogram.types import InlineKeyboardMarkup
@@ -13,7 +13,11 @@ from nana import setbot
 from nana.__main__ import restart_all
 from nana.utils.dynamic_filt import dynamic_data_filter
 
-repo = Repo()
+
+try:
+    repo = Repo()
+except InvalidGitRepositoryError:
+    pass
 
 
 @setbot.on_callback_query(dynamic_data_filter('change_branches'))

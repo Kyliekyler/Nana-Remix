@@ -16,6 +16,7 @@ from nana import (
     app,
     StartTime,
 )
+from nana.utils import filt
 from nana.utils.misc import paginate_modules
 from nana.plugins.chats import get_msgc
 from nana.languages.strings import tld
@@ -66,7 +67,7 @@ async def help_parser(client, chat_id, text, keyboard=None):
         await client.send_message(chat_id, text, reply_markup=keyboard)
 
 
-@setbot.on_message(filters.user(AdminSettings) & filters.command(['help']))
+@setbot.on_message(filters.user(AdminSettings) & filt.command(['help']))
 async def help_command(client, message):
     if message.chat.type != 'private':
         buttons = InlineKeyboardMarkup(
@@ -138,26 +139,28 @@ async def help_button(_, query):
 
 @setbot.on_message(
     filters.user(AdminSettings)
-    & filters.command(['stats'])
+    & filt.command(['stats'])
     & (filters.group | filters.private),
 )
 async def stats(_, message):
-    text = '**Here is your current stats**\n'
+    text = '**Current stats**\n'
     if DB_AVAILABLE:
-        text += '<b>Notes:</b> `{} notes`\n'.format(
+        text += ' - **Notes**: `{} notes`\n'.format(
             len(get_all_selfnotes(message.from_user.id) or ''),
         )
-        text += '<b>Group joined:</b> `{} groups`\n'.format(
+        text += ' - **Group joined**: `{} groups`\n'.format(
             len(get_all_chats()),
         )
     stk = await app.send(functions.messages.GetAllStickers(hash=0))
     all_sets = stk.sets
     count = sum(x.count for x in all_sets)
-    text += '<b>Stickers Count:</b> <code>{} across {} sets</code>\n'.format(
+    text += ' - **Stickers Count**: <code>{} over {} packs</code>\n'.format(
         count,
         len(all_sets),
     )
-    text += f'<b>Message received:</b> `{get_msgc()} messages`\n'
+    text += ' - **Message received**: `{} messages`\n'.format(
+        get_msgc(),
+    )
     uptime = get_readable_time(time.time() - StartTime)
-    text += f'<b>Nana uptime:</b> <code>{uptime}</code>'
+    text += f' - **Nana uptime**: `{uptime}`'
     await message.reply_text(text, quote=True)

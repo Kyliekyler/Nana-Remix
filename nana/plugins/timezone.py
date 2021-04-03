@@ -32,15 +32,15 @@ async def grabTime(_, message):
         return
     tz = time_country.replace('_', ' ')
     tzDateTime = datetime.now(timezone(tz))
-    date = tzDateTime.strftime(r'%d-%m-%Y')
+    date = tzDateTime.strftime(r'%d %b, %y')
     militaryTime = tzDateTime.strftime('%H:%M')
     time = datetime.strptime(militaryTime, '%H:%M').strftime('%I:%M %p')
     time_string = (
-        '__Currently it is__'
+        'Currently it is'
         + f' **{time}** '
-        + '__on__'
+        + 'on'
         + f' **{date}** '
-        + '__in__ '
+        + 'in '
         + f'**{tz}**'
     )
     await edit_or_reply(message, text=time_string)

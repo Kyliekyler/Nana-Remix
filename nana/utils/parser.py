@@ -1,5 +1,6 @@
 import html
 import re
+from nana import app
 
 
 def split_limits(text):
@@ -41,3 +42,36 @@ def mention_html(user_id, name):
 
 def mention_markdown(user_id, name):
     return '[{}](tg://user?id={})'.format(escape_markdown(name), user_id)
+
+
+async def user_time_and_reason(message):
+    if message.reply_to_message:
+        return (
+            message.reply_to_message.from_user.id,
+            message.command[1],
+            ' '.join(message.command[2:]),
+        )
+    u = await app.resolve_peer(message.command[1])
+    return u.user_id, message.command[2], ' '.join(message.command[3:])
+
+
+def time_parser_int(time_end):
+    month = time_end // 2678400
+    days = time_end // 86400
+    hours = time_end // 3600 % 24
+    minutes = time_end // 60 % 60
+    seconds = time_end % 60
+    times = ''
+    if month:
+        times += f'{month} month, '
+    if days:
+        times += f'{days} days, '
+    if hours:
+        times += f'{hours} hours, '
+    if minutes:
+        times += f'{minutes} minutes, '
+    if seconds:
+        times += f'{seconds} seconds'
+    if times == '':
+        times = f'{time_end} miliseconds'
+    return times[:-2] if times[-2:] == ', ' else times

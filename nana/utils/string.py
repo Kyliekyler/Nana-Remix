@@ -24,31 +24,23 @@ def replace_text(text):
     )
 
 
-def extract_time(message, time_val):
-    if any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
-        unit = time_val[-1]
-        time_num = time_val[:-1]  # type: str
-        if not time_num.isdigit():
-            message.reply('Unspecified amount of time.')
-            return ''
+def extract_time(time_val):
+    if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+        return False
+    unit = time_val[-1]
+    time_num = time_val[:-1]  # type: str
+    if not time_num.isdigit():
+        return False
 
-        if unit == 'm':
-            bantime = int(time.time() + int(time_num) * 60)
-        elif unit == 'h':
-            bantime = int(time.time() + int(time_num) * 60 * 60)
-        elif unit == 's':
-            bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
-        else:
-            # how even...?
-            return ''
-        return bantime
+    if unit == 'd':
+        bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
+    elif unit == 'h':
+        bantime = int(time.time() + int(time_num) * 60 * 60)
+    elif unit == 'm':
+        bantime = int(time.time() + int(time_num) * 60)
     else:
-        message.reply(
-            'Invalid time type specified. Needed m, h, or s. got: {}'.format(
-                time_val[-1],
-            ),
-        )
-        return ''
+        return False
+    return bantime
 
 
 def extract_time_str(message, time_val):

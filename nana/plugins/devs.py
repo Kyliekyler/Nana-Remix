@@ -24,10 +24,6 @@ Run Python code
 -> `sh (command)`
 Execute shell commands
 
-──「 **Take log** 」──
--> `log`
-Upload the recent logs on nekobin and send it
-
 ──「 **Data Centers** 」──
 -> `dc`
 Get your DC

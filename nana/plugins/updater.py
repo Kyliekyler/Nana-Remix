@@ -17,6 +17,7 @@ from nana import REPOSITORY
 from nana.__main__ import except_hook
 from nana.__main__ import restart_all
 from nana.plugins.assistant.updater import update_changelog
+from nana.utils.capture_errors import capture_err
 
 __MODULE__ = 'Updater'
 __HELP__ = """
@@ -68,6 +69,7 @@ async def initial_git(repo):
     filters.user(AdminSettings) &
     filters.command('update', COMMAND_PREFIXES),
 )
+@capture_err
 async def updater(client, message):
     initial = False
     try:
@@ -170,14 +172,14 @@ async def updater(client, message):
 
     if len(message.text.split()) != 2:
         changelog_str = (
-            'To update latest changelog, do\n-> `update now`\n\n**'
-            f'New UPDATE available for [{brname}]:\n'
-            f'\nCHANGELOG:**\n`{changelog}` '
+            '**To update latest changelog, do**\n - `update now`\n\n'
+            f'**New UPDATE available for**: `[{brname}]`\n'
+            f'\n**CHANGELOG**:\n`{changelog}` '
         )
         if len(changelog_str) > 4096:
             await edit_or_reply(
                 message,
-                text='`Changelog is too big, view the file to see it.`',
+                text='**Changelog is too big, view the file to see it.**',
             )
             with open('nana/cache/output.txt', 'w+') as file:
                 file.write(changelog_str)
@@ -185,7 +187,7 @@ async def updater(client, message):
                 message.chat.id,
                 'nana/cache/output.txt',
                 reply_to_message_id=message.message_id,
-                caption='`Changelog file`',
+                caption='**Changelog file**',
             )
             os.remove('nana/cache/output.txt')
         else:
@@ -211,6 +213,6 @@ async def updater(client, message):
     else:
         await edit_or_reply(
             message,
-            text='Usage:\n-> `update` to check update\n'
-            '-> `update now` to update latest commits\nFor more information ',
+            text='**Usage**:\n - `update` to check update\n'
+            ' - `update now` to update latest commits\nFor more information ',
         )

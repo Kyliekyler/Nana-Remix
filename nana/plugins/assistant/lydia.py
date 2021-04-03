@@ -15,13 +15,14 @@ from nana import BotUsername
 from nana import LYDIA_API
 from nana import Owner
 from nana import setbot
+from nana.utils import filt
 from nana.plugins.assistant.database import lydia_db as sql
 
 CoffeeHouseAPI = API(LYDIA_API)
 api_ = LydiaAI(CoffeeHouseAPI)
 
 
-@setbot.on_message(filters.user(AdminSettings) & filters.command(['addchat']))
+@setbot.on_message(filters.user(AdminSettings) & filt.command(['addchat']))
 async def add_chat(_, message):
     global api_
     chat_id = message.chat.id
@@ -36,7 +37,7 @@ async def add_chat(_, message):
         await message.reply('AI is already enabled for this chat!')
 
 
-@setbot.on_message(filters.user(AdminSettings) & filters.command(['rmchat']))
+@setbot.on_message(filters.user(AdminSettings) & filt.command(['rmchat']))
 async def remove_chat(_, message):
     chat_id = message.chat.id
     is_chat = sql.is_chat(chat_id)

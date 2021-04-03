@@ -12,10 +12,10 @@ __MODULE__ = 'Quotly'
 __HELP__ = """
 ──「 **Make Quote From Message** 」──
 -> `q`
-__make the replied message's text a QuotLy sticker__
+make the replied message's text a QuotLy sticker
 
 -> `quote`
-__Pillow Qoutes__
+Pillow Qoutes
 
 """
 
@@ -43,7 +43,7 @@ async def q_maker(_, message):
             print(e)
             await sleep(0.5)
             try:
-                print('`Making quote...`')
+                print('**Making quote..**')
             except Exception as e:
                 print(e)
     msg_id = ms_g[0]['message_id']

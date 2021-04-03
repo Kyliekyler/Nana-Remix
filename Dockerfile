@@ -15,6 +15,7 @@ RUN apt update && apt upgrade -y && \
     git \
     util-linux \
     libffi-dev \
+    libfreetype6-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
     libwebp-dev \

@@ -1,78 +1,78 @@
 # Language
-language_switch_success_pm: Preferensi bahasa Anda telah diperbarui menjadi {}
+language_switch_success_pm: Preferensi bahasa anda telah diperbarui menjadi {}
 language_not_supported: "{} belum didukung!"
 language_code_not_valid: Itu bukan kode bahasa yang valid. Gunakan kode ISO yang diterima secara internasional!
 language_current_locale: "Bahasa anda saat ini adalah: **{}**"
 language_select_language: "**Pilih bahasa** \n"
 # Assistant Help
-inline_help_text: "**Panduan Inline**\nKetik saja `@{} (perintah)` di kotak teks, dan tunggu tanggapan.\n\n──「 **Dapatkan Catatan dari Inline** 」──\n-> `note (*notetag)`\nDan tunggu daftar catatan sebaris, saat ini hanya mendukung Teks dan Tombol.\n\n──「 **Stylish Generator Inline** 」──\n-> `stylish (teks anda)`\nMengubah teks menjadi berbagai gaya, dapat digunakan di mana saja!\n\n* = Dapat digunakan sebagai opsional"
-start_message: "Hai {},\nNana Siap Melayani Anda!\n===================\n-> Python: `{}`\n-> Userbot: `{} (v{})`\n-> Asisten: `Berjalan (v{})`\n-> Basisdata: `{}`\n-> Bergabung dalam grup: `{}`\n===================\n`Untuk lebih lanjut tentang bot, tekan tombol di bawah`"
+inline_help_text: "**Panduan Inline**\nKetik saja `@{} (perintah)`, dan tunggu tanggapannya.\n\n──「 **Dapatkan Catatan dari Inline** 」──\n-> `note (*notetag)`\nDan tunggu daftar catatan di barisan, saat ini hanya mendukung teks dan tombol.\n\n──「 **Stylish Generator Inline** 」──\n-> `stylish (teks anda)`\nMengubah teks menjadi berbagai gaya, dapat digunakan di mana saja!\n\n* = opsional"
+start_message: "Hai {},\nNana hidup dan siap melayani anda!\n===================\n-> Python: `{}`\n-> Userbot: `{} (v{})`\n-> Asisten: `Berlari (v{})`\n-> Basisdata: `{}`\n-> Bergabung dalam grup: `{}`\n===================\n`Untuk lebih lanjut tentang bot, tekan tombol di bawah`"
 help_btn: "Bantuan"
-help_str: "Kamu bisa memakai {} di userbot Anda untuk menjalankan perintah itu.\nBerikut adalah modul yang Anda miliki\nPerintah utama yang tersedia:\n - /start: dapatkan status bot anda\n - /stats: dapatkan status userbot anda\n - /settings: pengaturan userbot anda\n - /getme: dapatkan info profil userbot anda\n - /help: dapatkan menu ini"
-alive_str: "**[Nana-Remix](https://github.com/pokurt/Nana-Remix):**\n - **Bot**: `{} (v{})`\n - **Pyrogram**: `{}`\n - **Python**: `{}`\n - **Basisdata**: `{}`\n"
+help_str: "Semua perintah bisa digunakan dengan awalan berikut: {}\n\nPerintah utama:\n - /start: menunjukkan status bot anda\n - /stats: menunjukkan statistik userbot anda\n - /settings: membuka pengaturan userbot anda\n - /getme: memberi tahu info profil anda\n - /help: membuka menu ini\n\nBerikut adalah modul yang anda miliki saat ini"
+alive_str: "**[Nana-Remix](https://github.com/pokurt/Nana-Remix):**\n - **Bot**: `{} (v{})`\n - **Pyrogram**: `{}`\n - **Python**: `{}`\n - **Basisdata**: `{}`"
 # Gdrive Assistant
-gdrive_credential_err_heroku: "Halo, sepertinya Anda belum login ke google drive 🙂 Saya dapat membantu Anda untuk login.\nPertama-tama, anda perlu mengaktifkan API Google Drive anda\n1. [Kesini]('https://developers.google.com/drive/api/v3/quickstart/python'),\nklik Aktifkan API drive\n2. Masuk ke akun Google anda (lewati ini jika Anda sudah masuk)\n3. Setelah masuk, klik Aktifkan lagi API drive,\ndan klik tombol Unduh Konfigurasi Klien, unduh itu.\n4. Setelah mengunduh file itu, buka file itu lalu salin semua konten itu ke dashboard.heroku.com, \npilih aplikasi anda dan pergi ke pengaturan, pergi ke config vars lalu tambahkan kunci dengan nama gdrive_credentials dengan value kredensial anda\nSetelah itu, anda dapat melanjutkan ke panduan berikutnya dengan mengetik /gdrive"
+gdrive_credential_err_heroku: "Sepertinya anda belum masuk ke Google drive, tapi saya dapat membantu anda.\n\n    1. [Kesini](https://developers.google.com/drive/api/v3/quickstart/python),\nlalu klik \"Aktifkan API Drive\".\n    2. Masuk ke akun Google anda (lewati langkah ini jika anda sudah masuk).\n    3. Setelah masuk, klik \"Aktifkan API Drive\" lagi.\n    4. Klik \"Unduh Konfigurasi Klien\", dan unduh itu.\n    5. Setelah mengunduhnya, buka lalu salin kontennya.\n    6.    Jika itu diterapkan di Heroku:\n              - Pergi ke dashboard.heroku.com, pilih aplikasi Anda, buka pengaturan, klik \"Reveal Config Vars\".\n           Dan jika di Zeet:\n              - Pergi ke zeet.co/dashboard, pilih aplikasi Anda, klik \"Pengaturan\", gulir ke bawah ke environment cariables.\n    7. Tambahkan kunci bernama gdrive_credentials dan tambahkan konten file ke nilainya.\n\nSetelah itu, anda dapat melanjutkan panduan berikutnya dengan /gdrive."
 # Adminlist Module
 # Adminlist
-adminlist_one: "**Admins di {}**\n╒═══「 Pencipta 」\n"
-adminlist_two: "╞══「 {} Administrator Manusia 」\n"
-adminlist_three: "╞══「 {} Administrator Bot 」\n"
-adminlist_four: "╘══「 Total {} Admin 」"
+adminlist_one: "**Admins di {}**\n╒═══「 Pencipta 」"
+adminlist_two: "╞══「 {} Administrator Manusia 」"
+adminlist_three: "╞══「 {} Administrator Bot 」"
+adminlist_four: "╘══「 Total: {} admin 」"
 # ReportAdmins
 reportadmins_one: "{} dilaporkan ke admin."
-reportadmins_two: "Memanggil admin di {}."
+reportadmins_two: "Memanggil admin dari {}."
 # tagall
 tagall: "Halo semua!"
 # botlist
-botlist_one: "☠️ Akun terhapus"
-botlist_two: "**Semua bot dalam grup {}**\n"
+botlist_one: "☠️ Akun Terhapus"
+botlist_two: "**Bot dalam grup {}**\n"
 botlist_three: "╒═══「 Bot 」\n"
-botlist_four: "╘══「 Total {} Bot 」"
+botlist_four: "╘══「 Total {} bot 」"
 # Admins Module
 # errors
-user_invalid: "`username tidak valid`"
-peer_invalid: "`username atau userid tidak valid`"
-id_invalid: "`userid tidak valid`"
+user_invalid: "`Username tidak valid`"
+peer_invalid: "`ID atau username tidak valid`"
+id_invalid: "`ID tidak valid`"
 denied_permission: "`izin ditolak`"
 # Invite_link
-invite_link: "**Tautan Undangan dibuat untuk {}:**\n - **Tautan Bergabung:** {}"
+invite_link: "**Tautan undangan dibuat untuk {}:**\n - {}"
 # pin_message
 pin_message: "`Balas pesan untuk menyematkan`"
 # mute
-mute_user: "`Balas ke pengguna untuk membisukan mereka`"
+mute_user: "`Balas ke pengguna untuk membisukan`"
 # unmute
-unmute_user: "`Balas ke pengguna untuk menyuarakan mereka`"
+unmute_user: "`Balas ke pengguna untuk menyuarakan`"
 # kick
 kick_user: "`Balas ke pengguna untuk menendang`"
 # ban
-ban_user: "`Balas ke pengguna untuk melarang.`"
+ban_user: "`Balas ke pengguna untuk melarang`"
 # unban
 unban_user: "`Balas ke pengguna untuk membatalkan pelarangan`"
 # promote
-promote_user: "`balas ke pengguna untuk mempromosikan`"
+promote_user: "`Balas ke pengguna untuk mempromosikan`"
 # demote
-demote_user: "`balas ke pengguna untuk menurunkan jabatan.`"
+demote_user: "`Balas ke pengguna untuk demosikan.`"
 # lock
-lock_all: "`Mengunci semua izin dari Obrolan ini!`"
-lock_chat: "`Mengunci {} untuk obrolan ini!`"
+lock_all: "`Mengunci semua dari obrolan ini.`"
+lock_chat: "`Mengunci {} untuk obrolan ini.`"
 # Unlock
-unlock_all: "`Membuka semua izin dari Obrolan ini!`"
-unlock_invalid: "`Jenis Buka Kunci Tidak Valid!`"
-unlock_chat: "`Membuka {} untuk obrolan ini!`"
+unlock_all: "`Membuka semua untuk obrolan ini.`"
+unlock_invalid: "`Jenis buka kunci tidak valid`"
+unlock_chat: "`Membuka {} untuk obrolan ini.`"
 # viewlocks
-permission_view_str: "<b>Izin obrolan:</b>\n<b>Kirim Pesan:</b> {}\n<b>Kirim Media:</b> {}\n<b>Kirim Stiker:</b> {}\n<b>Kirim Animasi:</b> {}\n<b>Dapat Bermain Game:</b> {}\n<b>Dapat Menggunakan Bot Inline:</b> {}\n<b>Pratinjau Halaman Web:</b> {}\n<b>Kirim Polling:</b> {}\n<b>Merubah Info:</b> {}\n<b>Undang Pengguna:</b> {}\n<b>Sematkan Pesan:</b> {}"
+permission_view_str: "<b>Izin obrolan:</b>\n<b>Mengirim Pesan:</b> {}\n<b>Mengirim Media:</b> {}\n<b>Mengirim Stiker:</b> {}\n<b>Mengirim Animasi:</b> {}\n<b>Bermain Game:</b> {}\n<b>Menggunakan Bot Inline:</b> {}\n<b>Pratinjau Halaman Web:</b> {}\n<b>Membuat Polling:</b> {}\n<b>Merubah Info:</b> {}\n<b>Mengundang Pengguna:</b> {}\n<b>Menyematkan Pesan:</b> {}"
 # SpeedTest Module
 # Speed-Test
-speed_test_trigger: "Pilih Mode TesKecepatan"
-speed_test_running: "Menjalankan teskecepatan...."
+speed_test_trigger: "Pilih mode uji kecepatan"
+speed_test_running: "Menjalankan uji kecepatan...."
 # Gdrive Assistant
-gdrive_credential_err: "Halo, sepertinya Anda belum masuk ke Google Drive  🙂\n\nSaya dapat membantu Anda untuk masuk.\n\nPertama-tama, Anda perlu mengaktifkan API Google Drive Anda\\n1. [Kesini](https://developers.google.com/drive/api/v3/quickstart/python), klik **Aktifkan API drive**\n2. Masuk ke akun Google Anda (lewati ini jika Anda sudah masuk)\\n3. Setelah login, klik **Aktifkan API drive** lagi, dan klik tombol **Unduh Konfigurasi Klien**, unduh itu.\n4. Setelah mengunduh file itu, buka file itu lalu salin semua konten itu, kembali ke telegram lalu lakukan .credentials (salin konten file itu) lakukan tanpa tanda kurung\n\nSetelah itu, Anda dapat melanjutkan ke panduan berikutnya dengan mengetik /gdrive"
+gdrive_credential_err: "Sepertinya wnda belum masuk ke Google drive, tapi saya dapat membantu anda.\n\n    1. [Kesini](https://developers.google.com/drive/api/v3/quickstart/python),\nlalu klik \"Aktifkan API Drive\".\n    2. Masuk ke akun google anda (lewati langkah ini jika Anda sudah masuk).\n    3. Setelah masuk, klik \"Aktifkan API Drive\" lagi.\n    4. Klik \"Unduh Konfigurasi Klien\", dan unduh itu.\n    5. Setelah mengunduhnya, buka lalu salin kontennya.\n    6. Kembali ke Telegram, ketik .credentials, lalu spasi, tempel konten file, lalu kirim.\n\nSetelah itu, anda dapat melanjutkan panduan berikutnya dengan /gdrive."
 # Settings Module
-settings_userbot_stop: "Userbot: `Berhenti (v{})`\n"
-settings_userbot_running: "Userbot: `Berlari (v{})`\n"
-settings_assistant_running: "Asisten: `Berlari (v{})`\n"
-settings_database: "Basisdata: `{}`\n"
-settings_python: "Python: `{}`\n"
+settings_userbot_stop: "Userbot: `berhenti (v{})`\n"
+settings_userbot_running: "-> Userbot: `berlari (v{})`\n"
+settings_assistant_running: "-> Asisten: `berlari (v{})`\n"
+settings_database: "-> Basisdata: `{}`\n"
+settings_python: "-> Python: `{}`\n"
 settings_userbot_stopbutton: "Hentikan Bot"
 settings_userbot_startbutton: "Mulai Bot"
 settings_userbot_restartbutton: "Mulai Ulang Bot"
@@ -81,12 +81,12 @@ settings_change_repo_button: "Ubah Sumber Repo"
 settings_stats_botstart: "✅ Bot dimulai!"
 settings_stats_botstop: "❎ Bot dihentikan!"
 settings_stats_botrestart: "✅ Bot dimulai ulang!"
-settings_bot_stoprestart_err: "Userbot Sudah Berhenti! Batalkan Mulai Ulang"
-settings_bot_restarting: "Harap tunggu bot memulai ulang..."
-speed_test_result: "**Hasil TesKecepatan:**"
+settings_bot_stoprestart_err: "Userbot sudah dihentikan! Mulai ulang dibatalkan."
+settings_bot_restarting: "Harap tunggu bot dimulai ulang..."
+speed_test_result: "**Hasil Uji Kecepatan:**"
 speed_test_isp: "**ISP:**"
-speed_test_download: "**Unduhan:**"
-speed_test_upload: "**Unggahan:**"
+speed_test_download: "**Unduh:**"
+speed_test_upload: "**Unggah:**"
 speed_test_ping: "**Ping:**"
 speed_test_button_text: "Teks"
 speed_test_button_image: "Gambar"
@@ -95,6 +95,6 @@ language_btn: "Bahasa"
 updater_available_text: "**UPDATE baru tersedia untuk [{}]!**"
 update_now_btn: "🔄 Perbarui Sekarang!"
 update_successful: "**Berhasil diperbarui!**"
-update_welcome: "🎉 Selamat datang di Nana Bot v{} & Asisten v{}"
+update_welcome: "🎉 Selamat Datang Di Nana v{} & Asisten v{}!"
 updated_changelog: "──「 **Pembaruan log perubahan** 」──"
-update_successful_force: "Berhasil Diperbarui Paksa!"
+update_successful_force: "Berhasil memperbarui paksa!"

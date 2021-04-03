@@ -6,9 +6,10 @@ from pyrogram import filters
 
 from nana import setbot, AdminSettings, gauth, GDRIVE_CREDENTIALS, ENV
 from nana.languages.strings import tld
+from nana.utils import filt
 
 
-@setbot.on_message(filters.user(AdminSettings) & filters.command(['gdrive']))
+@setbot.on_message(filters.user(AdminSettings) & filt.command(['gdrive']))
 async def gdrive_helper(_, message):
     if len(message.text.split()) == 1:
         gdriveclient = os.path.isfile('client_secrets.json')

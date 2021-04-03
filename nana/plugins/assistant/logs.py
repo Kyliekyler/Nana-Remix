@@ -2,6 +2,7 @@ from nekobin import NekoBin
 from nana import setbot
 from nana import AdminSettings
 from nana.utils.dynamic_filt import dynamic_data_filter
+from nana.utils import filt
 
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton
@@ -11,7 +12,7 @@ from pykeyboard import InlineKeyboard
 
 @setbot.on_message(
     filters.user(AdminSettings) &
-    filters.command('logs'),
+    filt.command('logs'),
 )
 async def logs(_, message):
     keyboard = InlineKeyboard(row_width=1)

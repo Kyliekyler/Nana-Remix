@@ -9,10 +9,11 @@ from pyrogram import filters
 
 from nana import Owner
 from nana import setbot
+from nana.utils import filt
 from nana.plugins.devs import aexec
 
 
-@setbot.on_message(filters.user(Owner) & filters.command(['eval']))
+@setbot.on_message(filters.user(Owner) & filt.command(['eval']))
 async def eval(client, message):
     status_message = await message.reply_text('`Running ...`')
     try:
@@ -62,7 +63,7 @@ async def eval(client, message):
         await status_message.edit(final_output)
 
 
-@setbot.on_message(filters.user(Owner) & filters.command(['sh']))
+@setbot.on_message(filters.user(Owner) & filt.command(['sh']))
 async def terminal(client, message):
     if len(message.text.split()) == 1:
         await message.reply('Usage: `/sh ping -c 5 google.com`')

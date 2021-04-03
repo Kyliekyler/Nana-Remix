@@ -11,8 +11,10 @@ from nana import (
     ASSISTANT_VERSION,
     DB_AVAILABLE,
     NANA_IMG,
+    REPOSITORY,
 )
 from nana.__main__ import reload_userbot, restart_all
+from nana.utils import filt
 from nana.utils.dynamic_filt import dynamic_data_filter
 from nana.languages.strings import tld
 
@@ -26,10 +28,11 @@ async def is_userbot_run():
 
 async def get_text_settings():
     me = await is_userbot_run()
+    text = tld('settings_userbot_repo').format(REPOSITORY)
     if not me:
-        text = tld('settings_userbot_stop').format(USERBOT_VERSION)
+        text += tld('settings_userbot_stop').format(USERBOT_VERSION)
     else:
-        text = tld('settings_userbot_running').format(USERBOT_VERSION)
+        text += tld('settings_userbot_running').format(USERBOT_VERSION)
     text += tld('settings_assistant_running').format(ASSISTANT_VERSION)
     text += tld('settings_database').format(DB_AVAILABLE)
     text += tld('settings_python').format(python_version())
@@ -66,7 +69,7 @@ async def get_button_settings():
 
 @setbot.on_message(
     filters.user(AdminSettings) &
-    filters.command(['settings']) &
+    filt.command(['settings']) &
     filters.private,
 )
 async def settings(_, message):
